@@ -1,0 +1,2 @@
+class ArticleFavorite < ApplicationRecord
+end

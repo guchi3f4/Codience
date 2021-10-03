@@ -1,0 +1,2 @@
+class ArticleBookmark < ApplicationRecord
+end
