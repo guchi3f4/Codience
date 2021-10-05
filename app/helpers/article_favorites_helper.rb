@@ -1,0 +1,2 @@
+module ArticleFavoritesHelper
+end

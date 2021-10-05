@@ -1,0 +1,21 @@
+<div class='container py-5'>
+  <div class='article-error'>
+    <%= render 'layouts/error', obj: @article %>
+  </div>
+  <div class='row'>
+    <div class='col-md-4'>
+    <h3 class='mb-3'>User info</h3>
+      <div class='col-md-11'>
+        <%= render 'layouts/user_info', user: current_user %>
+        <%= render 'articles/article_form', article: @article %>
+      </div>
+    </div>
+
+    <div class='col-md-8'>
+      <h2>Articles</h2>
+      <% @articles.each do |article| %>
+        <%= render 'articles/index', article: article %>
+      <% end %>
+    </div>
+  </div>
+</div>

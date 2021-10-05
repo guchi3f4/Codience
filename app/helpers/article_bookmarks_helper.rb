@@ -1,0 +1,2 @@
+module ArticleBookmarksHelper
+end
