@@ -13,4 +13,14 @@ class User < ApplicationRecord
   has_many :following, through: :active_relation, source: :followed
   has_many :followers, through: :passive_relation, source: :follower
   attachment :profile_image
+
+  validates:name,
+    uniqueness: true,
+    length: { in: 2..20 }
+  validates:introduction,
+    length: { maximum: 100 }
+
+  def be_favorites_count
+    articles.map { |article| article.article_favorites.count }.sum
+  end
 end

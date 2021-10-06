@@ -1,7 +1,4 @@
 <div class='container py-5'>
-  <div class='article-error'>
-    <%= render 'layouts/error', obj: @article %>
-  </div>
   <div class='row'>
     <div class='col-md-4'>
       <h3 class='mb-3'>User info</h3>
@@ -11,10 +8,14 @@
       </div>
     </div>
     <div class='col-md-8'>
-      <h2>Articles</h2>
-      <% @articles.each do |article| %>
-        <%= render 'articles/index', article: article %>
-      <% end %>
+      <h2>Users</h2>
+      <div class='row'>
+        <% @users.each do |user| %>
+        <div class='col-6 mb-3'>
+          <%= render 'layouts/user_info', user: user %>
+        </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
