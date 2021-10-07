@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :articles, except: [:new] do
+  resources :articles do
     resources :article_comments, only: [:create, :destroy]
     resource :article_favorites, only: [:create, :destroy]
     resource :article_bookmarks, only: [:create, :destroy]

@@ -1,0 +1,61 @@
+<div class='border py-4 px-2 shadow-sm text-center h-100' style='border-radius: 15%;'>
+  <div class='row pb-4'>
+    <div class='col-6 text-right'>
+      <%= link_to user_path(user) do %>
+        <%= attachment_image_tag user, :profile_image, :fill, 100, 100, fallback: "no_image.jpg", class:'rounded-circle' %>
+      <% end %>
+    </div>
+    <div class='col-6 text-left pt-4'>
+      <%= link_to user_path(user) do %>
+        <p class='font-weight-bold text-dark pt-1 mb-2 <%='mt-2' if user == current_user%>' style='font-size: 18px' ><%= user.name %></p>
+      <% end %>
+      <div class='user-follow<%= user.id %>'>
+        <%= render 'users/user_follow', user: user %>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class='row font-weight-bold' style='color: #45494D'>
+      <div class='col-5 offset-1 border-bottom border-top py-2'>
+        <span class='font-italic'>followers</span><br>
+        <%= link_to followers_user_path(user) do %>
+          <%= user.followers.count %>
+        <% end %>
+      </div>
+      <div class='col-5 border-bottom border-top py-2'>
+        <span class='font-italic'>followes</span><br>
+        <%= link_to following_user_path(user) do %>
+          <%= user.following.count %>
+        <% end %>
+      </div>
+    </div>
+    <div class='row font-weight-bold' style='color: #45494D'>
+      <div class='col-5 offset-1 border-bottom py-2'>
+        <span class='font-italic'>投稿</span><br>
+        <%= link_to posts_user_path(user) do %>
+          <%= user.articles.count %>
+        <% end %>
+      </div>
+      <div class='col-5 border-bottom py-2'>
+        <span class='font-italic'>ブックマーク</span><br>
+        <%= link_to bookmarks_user_path(user) do %>
+          <%= user.article_bookmarks.count %>
+        <% end %>
+      </div>
+    </div>
+    <div class='row font-weight-bold' style='color: #45494D'>
+      <div class='col-5 offset-1 border-bottom py-2'>
+        <span class='font-italic'>被いいね</span><br>
+        <sapan class='text-primary'><%= user.be_favorites_count %></sapan>
+      </div>
+      <div class='col-5 border-bottom py-2'>
+        <span class='font-italic'>被閲覧</span><br>
+        <sapan class='text-primary'><%= user.be_favorites_count %></span>
+      </div>
+    </div>
+    <div class='px-2'>
+      <p class='font-weight-bold py-2 mb-0' style='color: #45494D'>introduction</p>
+      <%= user.introduction %>
+    </div>
+  </div>
+</div>

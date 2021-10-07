@@ -8,10 +8,10 @@ class User < ApplicationRecord
   has_many :article_favorites, dependent: :destroy
   has_many :article_bookmarks, dependent: :destroy
 
-  has_many :active_relation, class_name: "UserRelation", foreign_key: "follower_id", dependent: :destroy
-  has_many :passive_relation, class_name: "UserRelation", foreign_key: "followed_id", dependent: :destroy
-  has_many :following, through: :active_relation, source: :followed
-  has_many :followers, through: :passive_relation, source: :follower
+  has_many :active_relations, class_name: "UserRelation", foreign_key: "follower_id", dependent: :destroy
+  has_many :passive_relations, class_name: "UserRelation", foreign_key: "followed_id", dependent: :destroy
+  has_many :following, through: :active_relations, source: :followed
+  has_many :followers, through: :passive_relations, source: :follower
   attachment :profile_image
 
   validates:name,
@@ -22,5 +22,9 @@ class User < ApplicationRecord
 
   def be_favorites_count
     articles.map { |article| article.article_favorites.count }.sum
+  end
+
+  def following?(user)
+    following.include?(user)
   end
 end

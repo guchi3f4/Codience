@@ -4,9 +4,9 @@
   </div>
   <div class='row'>
     <div class='col-md-4'>
-    <h3 class='mb-3'>User info</h3>
+      <%= render 'users/user_info_head', user: current_user %>
       <div class='col-md-11 px-0'>
-        <%= render 'layouts/user_info', user: @user %>
+        <%= render 'users/user_info', user: @user %>
         <%= render 'articles/article_form', article: @article %>
       </div>
     </div>

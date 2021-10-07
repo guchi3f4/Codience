@@ -1,0 +1,50 @@
+<div class='col-md-10 col-lg-8 mx-auto py-5 px-5 border'>
+  <div class='border py-4 px-2 shadow-sm text-center h-100' style='border-radius: 10%;'>
+    <div class='row pb-4'>
+      <div class='col-6 text-right'>
+        <%= attachment_image_tag @user, :profile_image, :fill, 100, 100, fallback: "no_image.jpg", class:'rounded-circle' %>
+      </div>
+      <div class='col-6 text-left pt-4'>
+        <p class='font-weight-bold pt-1 mb-2 <%='mt-2' if @user == current_user%>' style='font-size: 18px' ><%= @user.name %></p>
+        <div class='user-follow<%= @user.id %>'>
+          <%= render 'users/user_follow', user: @user %>
+        </div>
+      </div>
+    </div>
+    <div style='font-size: 20px;'>
+      <div class='row'>
+        <div class='col-4 offset-2 border-bottom border-top py-3'>
+          followers：<%= @user.followers.count %>人
+          <%= link_to 'フォロワー', followers_user_path(@user), class:'d-block pt-2' %>
+        </div>
+        <div class='col-4 border-bottom border-top py-3'>
+          followes：<%= @user.following.count %>人
+          <%= link_to 'フォロー中', following_user_path(@user), class:'d-block pt-2' %>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 offset-2 border-bottom py-3'>
+          投稿：<%= @user.articles.count %>件
+          <%= link_to '投稿一覧', posts_user_path(@user), class:'d-block pt-2' %>
+        </div>
+        <div class='col-4 border-bottom py-3'>
+          ブックマーク：<%= @user.article_bookmarks.count %>件
+          <%= link_to 'ブックーマク一覧', bookmarks_user_path(@user), class:'d-block pt-2' %>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 offset-2 border-bottom py-3'>
+          被いいね：<%= @user.be_favorites_count %>件
+        </div>
+        <div class='col-4 border-bottom py-3'>
+        　被閲覧：<%= @user.be_favorites_count %>件
+        </div>
+      </div>
+
+      <div class='px-2'>
+        <p class='mb-2'>introduction</p>
+        <%= @user.introduction %>
+      </div>
+    </div>
+  </div>
+</div>
