@@ -8,11 +8,28 @@ class ArticlesController < ApplicationController
   end
 
   def index
-    @articles = Article.order(id: 'DESC')
-    @article = Article.new
-
-    @results = Tag.all.map do |tag|
-      { tag: tag.name, count: tag.articles.count }
+    if params[:content].present?
+      @tag_names = params[:content].split(',')
+      if @tag_names.count == 1
+        @tag = Tag.find_by(name: params[:content])
+        @articles = @tag.articles.order(id: 'DESC')
+      else
+        @tags = Tag.where(name: @tag_names)
+        @article_tags = ArticleTag.where(tag_id: @tags)
+        @article_ids = @article_tags.pluck(:article_id)
+        itself_article_ids  = @article_ids.group_by(&:itself)
+        hash_article_ids = itself_article_ids.map{ |key, value| [key, value.count] }.to_h
+        select_article_ids = hash_article_ids.select {|key, value| value >= 2 }
+        sort_article_ids = select_article_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
+        @articles = Article.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
+        # @articles = Kaminari.paginate_array(articles).page(params[:page]).per(7)
+      end
+    else
+      @articles = Article.order(id: 'DESC')
+      @article = Article.new
+      @results = Tag.all.map do |tag|
+        { tag: tag.name, count: tag.articles.count }
+      end
     end
   end
 

@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   devise_for :users
   root to: "homes#top"
 
+  namespace :api, format: 'json' do
+    resources :articles, only: [:index]
+  end
+
   resources :users, only: [:edit, :update, :index, :show] do
     resource :user_relations, only: [:create, :destroy]
     member do

@@ -1,36 +1,38 @@
-<div class='container rounded py-3 mt-3 shadow-sm' style='border: 2px solid lightgray;' onMouseOut="this.style.background=''" onMouseOver="this.style.background='rgba(227,231,237,0.3)'">
-  <%= link_to article_path(article), class:'text-dark' do %>
-    <h5 class='font-weight-bold'><%= article.title%></h5>
-  <% end %>
-  <div class='row border-bottom pb-2'>
-    <div class='col-9 text-truncate'>
-      Link: <%= link_to article.link do %>
-        <%= article.link %>
-      <% end %>
-    </div>
-    <div class='col-2 text-right favorite-btn<%= article.id %>'>
-      <%= render 'article_favorites/favorite', article: article %>
-    </div>
-    <div class='col-1 px-0 bookmark-btn<%= article.id %>'>
-      <%= render 'article_bookmarks/bookmark', article: article %>
-    </div>
-  </div>
-  <div class='row mb-2 py-2'>
-    <div class='col-md-3'>
-      <%= link_to user_path(article.user) do %>
-        <%= attachment_image_tag article.user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg", class:'rounded-circle' %>
-      <% end %>
-    </div>
-    <div class='col-md-9'><%= article.body.truncate(100, omission: '...') %></div>
-  </div>
-  <div>
-    Category：<%= link_to articles_path(tag: tag.name), class:'badge border border-success text-success mr-3', style:"font-size: 100%;" do %>
-      <%= article.category.name %>
+<% articles.each do |article| %>
+  <div class='container rounded py-3 mt-3 shadow-sm' style='border: 2px solid lightgray;' onMouseOut="this.style.background=''" onMouseOver="this.style.background='rgba(227,231,237,0.3)'">
+    <%= link_to article_path(article), class:'text-dark' do %>
+      <h5 class='font-weight-bold'><%= article.title%></h5>
     <% end %>
-    Tag：<% article.tags.each do |tag| %>
-      <%= link_to articles_path(tag: tag.name), class:'badge badge-primary badge-pill mr-1 mb-2', style:"font-size: 100%;" do %>
-        <%= tag.name %>
+    <div class='row border-bottom pb-2'>
+      <div class='col-9 text-truncate'>
+        Link: <%= link_to article.link do %>
+          <%= article.link %>
+        <% end %>
+      </div>
+      <div class='col-2 text-right favorite-btn<%= article.id %>'>
+        <%= render 'article_favorites/favorite', article: article %>
+      </div>
+      <div class='col-1 px-0 bookmark-btn<%= article.id %>'>
+        <%= render 'article_bookmarks/bookmark', article: article %>
+      </div>
+    </div>
+    <div class='row mb-2 py-2'>
+      <div class='col-md-3'>
+        <%= link_to user_path(article.user) do %>
+          <%= attachment_image_tag article.user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg", class:'rounded-circle' %>
+        <% end %>
+      </div>
+      <div class='col-md-9'><%= article.body.truncate(100, omission: '...') %></div>
+    </div>
+    <div>
+      Category：<%= link_to articles_path(tag: tag.name), class:'badge border border-success text-success mr-3', style:"font-size: 100%;" do %>
+        <%= article.category.name %>
       <% end %>
-    <% end %>
+      Tag：<% article.tags.each do |tag| %>
+        <%= link_to articles_path(tag: tag.name), class:'badge badge-primary badge-pill mr-1 mb-2', style:"font-size: 100%;" do %>
+          <%= tag.name %>
+        <% end %>
+      <% end %>
+    </div>
   </div>
-</div>
+<% end %>
