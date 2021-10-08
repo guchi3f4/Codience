@@ -1,11 +1,22 @@
 <div class='container-lg py-5'>
+  <h2>Tag検索</h2>
+  <%= form_with url: articles_path, method: :get, id:'form' do |f| %>
+    <div id="search">
+      <div id="all-tags" data-json="<%=  @all_tags.to_json%>"></div>
+      <%= javascript_pack_tag 'search_vue' %>
+    </div>
+    <div class="form-group">
+      <%= f.submit "検索", style:'display: none;', id:"search-btn", class:"btn btn-primary" %>
+    </div>
+  <% end %>
   <div class='article-error'>
     <%= render 'layouts/error', obj: @article %>
   </div>
   <div class='row'>
     <div class='col-md-4'>
-      <%= render 'users/user_info_head', user: current_user %>
       <div class='col-md-11 px-0'>
+        <%= render 'layouts/amcharts', results: @results %>
+        <%= render 'users/user_info_head', user: current_user %>
         <%= render 'users/user_info', user: current_user %>
         <%= render 'articles/article_form', article: @article %>
       </div>

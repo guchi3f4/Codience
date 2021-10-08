@@ -10,6 +10,10 @@ class ArticlesController < ApplicationController
   def index
     @articles = Article.order(id: 'DESC')
     @article = Article.new
+
+    @results = Tag.all.map do |tag|
+      { tag: tag.name, count: tag.articles.count }
+    end
   end
 
   def new
@@ -19,7 +23,7 @@ class ArticlesController < ApplicationController
   def create
     ApplicationRecord.transaction do
       @category = Category.find_or_create_by(name: params[:category_name])
-      sent_tags = params[:tag_name].split(',')
+      sent_tags = params[:tag_names].split(',')
       @article = Article.new(params_article)
       @article.save!
       @article.save_tag(sent_tags)
@@ -55,7 +59,7 @@ class ArticlesController < ApplicationController
       end
 
       @category = Category.find_or_create_by(name: params[:category_name])
-      sent_tags = params[:tag_name].split(',')
+      sent_tags = params[:tag_names].split(',')
       @article.update!(params_article)
 
       @article.save_tag(sent_tags)
