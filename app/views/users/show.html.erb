@@ -1,4 +1,17 @@
 <div class='col-md-10 col-lg-8 mx-auto py-5 px-5 border'>
+  <div class='row mb-2'>
+    <h3 class='col-6'>User info</h3>
+    <% if @user == current_user %>
+      <div class='col-6 text-right'>
+        <%= link_to edit_user_path(@user) do %>
+          <div class='rounded-circle shadow py-2 px-2 mr-2 text-secondary fas fa-user-cog' style='width: 35px; height: 35px;'></div>
+        <% end %>
+        <%= link_to new_article_path do %>
+          <div class='rounded-circle shadow py-2 px-2 text-secondary fas fa-pencil-alt' style='width: 35px; height: 35px;'></div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
   <div class='border py-4 px-2 shadow-sm text-center h-100' style='border-radius: 10%;'>
     <div class='row pb-4'>
       <div class='col-6 text-right'>

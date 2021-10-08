@@ -12,6 +12,10 @@ class ArticlesController < ApplicationController
     @article = Article.new
   end
 
+  def new
+    @article = Article.new
+  end
+
   def create
     ApplicationRecord.transaction do
       @category = Category.find_or_create_by(name: params[:category_name])
@@ -26,11 +30,14 @@ class ArticlesController < ApplicationController
       end
     end
     redirect_to article_path(@article)
-    flash[:notice] = 'You have created article successfully.'
 
   rescue ActiveRecord::RecordInvalid
-    @articles = Article.order(id: 'DESC')
-    render :index
+    if request.referer.include?('/articles/new')
+      render :new
+    else
+      @articles = Article.order(id: 'DESC')
+      render :index
+    end
   end
 
   def edit
@@ -58,7 +65,6 @@ class ArticlesController < ApplicationController
       end
     end
     redirect_to article_path(@article)
-    flash[:notice] = "You have updated article successfully."
   rescue ActiveRecord::RecordInvalid
     render :edit
   end

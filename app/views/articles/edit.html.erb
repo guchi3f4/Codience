@@ -2,7 +2,7 @@
   <div class='article-error'>
     <%= render 'layouts/error', obj: @article %>
   </div>
-  <h2 class="mb-5">Edit Article</h2>
+  <h2 class="mb-5">Editing Article</h2>
   <%= form_with model: @article, local:true do |f| %>
     <div class="form-group">
       <%= f.label :title, 'Title', class:'font-weight-bold' %>
