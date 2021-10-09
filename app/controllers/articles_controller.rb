@@ -5,9 +5,14 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
     @article_comment = ArticleComment.new
     @user = @article.user
+    @results = Tag.all.map do |tag|
+      { tag: tag.name, count: tag.articles.count }
+    end
   end
 
   def index
+    @category_names = Category.pluck(:name)
+    @article = Article.new
     if params[:content].present?
       @tag_names = params[:content].split(',')
       if @tag_names.count == 1
@@ -26,7 +31,6 @@ class ArticlesController < ApplicationController
       end
     else
       @articles = Article.order(id: 'DESC')
-      @article = Article.new
       @results = Tag.all.map do |tag|
         { tag: tag.name, count: tag.articles.count }
       end

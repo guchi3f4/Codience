@@ -1,20 +1,22 @@
 <template>
   <div>
-    <!--<div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">-->
-    <!--  <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="topTag in topTags">-->
-    <!--    {{topTag}}<span class="pl-1" type="button" v-on:click="delTopTag(topTag)">×</span>-->
-    <!--  </div>-->
-    <!--  <input id="top-field" class="border-0" style="outline: 0" type="text" autocomplete="off" placeholder="一つ選択できます"-->
-    <!--    v-model='newTopTag' v-on:keydown.enter="setTopTag"-->
-    <!--  >-->
-    <!--</div>-->
+    <div class='row mb-2'>
+      <h3 class='col-3 mb-0'>Tag検索</h3>
+      <div class='col-9 d-flex align-items-center'>
+        <h5 class='mb-0'>カテゴリ選択：</h5>
+        <select class='badge border border-success text-success' style="font-size: 20px;" name="category_name" id="category_name" v-model='selectedCategory'>
+          <option>未選択</option>
+          <option v-for='(category, index) in categories'>{{category}}</option>
+        </select>
+      </div>
+    </div>
 
     <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="content">
     <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
         {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>
       </div>
-      <input id="field1" class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"
+      <input id="field" class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"
       @input='onInput' autocomplete="off">
     </div>
 
@@ -37,13 +39,13 @@
   export default {
     data () {
         return {
-          // newTopTag: '',
           newTag: '',
-          // topTags: [],
+          categories: JSON.parse(document.getElementById('category-names').dataset.json),
           tags: [],
           allTags: [],
           open: false,
-          error: ''
+          error: '',
+          selectedCategory: '未選択'
         }
     },
 
@@ -65,20 +67,17 @@
       setTag: function (event) {
         if (event.keyCode !== 13 || this.newTag === '') return
         if (this.allTags === '' || this.allTags.indexOf(this.newTag) === -1) {
-          return this.error = 'このタグは存在しません'
+          return this.error = 'このタグは存在しません',
+          this.open = false;
         }
         if (this.tags.indexOf(this.newTag) !== -1) {
           return this.error = 'このタグはすでに入力済みです',
-          setTimeout(() => {
-            this.open = false;
-          }, 300)
+          this.open = false;
         }
         let tag = this.newTag;
         this.tags.push(tag);
         this.newTag = '';
-        setTimeout(() => {
-          this.open = false;
-        }, 300)
+        this.open = false;
       },
       delTag: function(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);
@@ -91,43 +90,42 @@
           this.error = ''
         }
         if (this.newTag != '') {
+          this.open = true;
           axios.get("/api/articles", {
             params: { keyword: this.newTag }
           })
           .then(response => {
             this.allTags = response.data;
-            if (this.allTags) {
-              this.open = true;
+            if (this.allTags == []) {
+              this.open = false;
             }
-          })
+          });
         }
         if (this.newTag == '') {
-          setTimeout(() => {
-            this.open = false;
-          }, 200)
+          this.open = false;
         }
       },
 
       // 補完項目の選択
       selectTag(index) {
-        setTimeout(() => {
-          this.open = false;
-        }, 300)
+        this.open = false;
         if (this.tags.indexOf(this.allTags[index]) !== -1) {
           return this.error = 'このタグはすでに入力済みです'
         }
         this.tags.push(this.allTags[index]);
         this.newTag = '';
-        document.getElementById("field1").focus()
       }
     },
 
     watch: {
+      selectedCategory: function() {
+        document.getElementById("search-btn").click();
+        document.getElementById("field").focus()
+      },
+
       tags: function() {
-        setTimeout(function() {
-          document.getElementById("search-btn").click();
-        }, 1)
-        document.getElementById("field1").focus()
+        document.getElementById("search-btn").click();
+        document.getElementById("field").focus()
       }
     }
   }

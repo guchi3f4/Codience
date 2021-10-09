@@ -5,16 +5,18 @@
   <div class='row'>
     <div class='col-md-4'>
       <div class='col-md-11 px-0'>
-        <%= render 'layouts/amcharts', results: @results %>
+        <div class='results pb-2'>
+          <%= render 'layouts/amcharts', results: @results %>
+        </div>
         <%= render 'users/user_info_head', user: current_user %>
         <%= render 'users/user_info', user: current_user %>
         <%= render 'articles/article_form', article: @article %>
       </div>
     </div>
     <div class='col-md-8'>
-      <h2>Tag検索</h2>
       <%= form_with url: articles_path, method: :get, id:'form' do |f| %>
         <div id="search">
+          <div id="category-names" data-json="<%= @category_names.to_json %>"></div>
           <%= javascript_pack_tag 'search_vue' %>
         </div>
         <div class="form-group">
