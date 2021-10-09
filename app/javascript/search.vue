@@ -63,7 +63,7 @@
       //   this.topTags.splice(this.topTags.indexOf(topTag), 1);
       // },
 
-　　　// エンターキー押下時
+      // エンターキー押下時
       setTag: function (event) {
         if (event.keyCode !== 13 || this.newTag === '') return
         if (this.allTags === '' || this.allTags.indexOf(this.newTag) === -1) {
@@ -119,12 +119,16 @@
 
     watch: {
       selectedCategory: function() {
-        document.getElementById("search-btn").click();
+        setTimeout(() => {
+          document.getElementById("search-btn").click();
+        }, 1)
         document.getElementById("field").focus()
       },
 
       tags: function() {
-        document.getElementById("search-btn").click();
+        setTimeout(() => {
+          document.getElementById("search-btn").click();
+        }, 1)
         document.getElementById("field").focus()
       }
     }

@@ -12,15 +12,25 @@ class ArticlesController < ApplicationController
 
   def index
     @category_names = Category.pluck(:name)
-    @article = Article.new
     if params[:content].present?
       @tag_names = params[:content].split(',')
       if @tag_names.count == 1
         @tag = Tag.find_by(name: params[:content])
-        @articles = @tag.articles.order(id: 'DESC')
+        if params[:category_name] == '未選択'
+          @articles = @tag.articles.order(id: 'DESC')
+        else
+          @category = Category.find_by(name: params[:category_name])
+          @articles = @tag.articles.where(category_id: @category.id).order(id: 'DESC')
+        end
+        duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.sum
       else
         @tags = Tag.where(name: @tag_names)
-        @article_tags = ArticleTag.where(tag_id: @tags)
+        @category = Category.find_by(name: params[:category_name])
+        if params[:category_name] == '未選択'
+          @article_tags = ArticleTag.where(tag_id: @tags)
+        else
+          @article_tags = ArticleTag.where(tag_id: @tags, article_id: @category.articles)
+        end
         @article_ids = @article_tags.pluck(:article_id)
         itself_article_ids  = @article_ids.group_by(&:itself)
         hash_article_ids = itself_article_ids.map{ |key, value| [key, value.count] }.to_h
@@ -28,11 +38,27 @@ class ArticlesController < ApplicationController
         sort_article_ids = select_article_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
         @articles = Article.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
         # @articles = Kaminari.paginate_array(articles).page(params[:page]).per(7)
+
+        results_articles = Article.where(id: hash_article_ids.keys)
+        duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.sum
+      end
+      if duplicate_tag_names != 0
+        itself_tag_names  = duplicate_tag_names.group_by(&:itself)
+        hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
+        sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+        @results = sort_tag_names.map { |key, value| { tag: key, count: value } }
+      else
+        @results = @category.category_tags.map { |category_tag| { tag: category_tag.tag.name, count: category_tag.registration_count } }
       end
     else
-      @articles = Article.order(id: 'DESC')
-      @results = Tag.all.map do |tag|
-        { tag: tag.name, count: tag.articles.count }
+      if params[:category_name].present? && params[:category_name] != '未選択'
+        @category = Category.find_by(name: params[:category_name])
+        @articles = @category.articles.order(id: 'DESC')
+        @results = @category.category_tags.map { |category_tag| { tag: category_tag.tag.name, count: category_tag.registration_count } }
+      else
+        @article = Article.new
+        @articles = Article.order(id: 'DESC')
+        @results = Tag.all.map { |tag| { tag: tag.name, count: tag.articles.count } }
       end
     end
   end

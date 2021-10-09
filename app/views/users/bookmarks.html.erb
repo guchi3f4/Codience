@@ -4,17 +4,31 @@
   </div>
   <div class='row'>
     <div class='col-md-4'>
-      <h3 class='mb-3'>User info</h3>
       <div class='col-md-11 px-0'>
+        <% if @article_bookmarks_ids.present? %>
+          <div class='results pb-2'>
+            <%= render 'layouts/amcharts', results: @results %>
+          </div>
+        <% end %>
+        <%= render 'users/user_info_head', user: @user %>
         <%= render 'users/user_info', user: @user %>
         <%= render 'articles/article_form', article: @article %>
       </div>
     </div>
     <div class='col-md-8'>
-      <h2>Bookmarked Articles</h2>
-      <% @articles.each do |article| %>
-        <%= render 'articles/index', article: article %>
+      <%= form_with url: bookmarks_user_path(@user), method: :get, id:'form' do |f| %>
+        <div id="search">
+          <div id="category-names" data-json="<%= @category_names.to_json %>"></div>
+          <%= javascript_pack_tag 'search_vue' %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "検索", style:'display: none;', id:"search-btn", class:"btn btn-primary" %>
+        </div>
       <% end %>
+      <h2>Bookmarked Articles</h2>
+      <div class='article-list'>
+        <%= render 'articles/index', articles: @articles %>
+      </div>
     </div>
   </div>
 </div>
