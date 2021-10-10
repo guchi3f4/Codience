@@ -1,18 +1,6 @@
-<div class='col-md-10 col-lg-8 mx-auto py-5 px-5 border'>
-  <div class='row mb-2'>
-    <h3 class='col-6'>User info</h3>
-    <% if @user == current_user %>
-      <div class='col-6 text-right'>
-        <%= link_to edit_user_path(@user) do %>
-          <div class='rounded-circle shadow py-2 px-2 mr-2 text-secondary fas fa-user-cog' style='width: 35px; height: 35px;'></div>
-        <% end %>
-        <%= link_to new_article_path do %>
-          <div class='rounded-circle shadow py-2 px-2 text-secondary fas fa-pencil-alt' style='width: 35px; height: 35px;'></div>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-  <div class='border py-4 px-2 shadow-sm text-center h-100' style='border-radius: 10%;'>
+<div class='col-md-10 col-lg-8 mx-auto py-5 px-5 border' style='min-height: 750px;'>
+  <%= render 'users/user_info_head', user: @user %>
+  <div class='py-4 px-2 mb-4 shadow-sm text-center h-100' style='border-radius: 10%; border: 1px solid rgba(16,15,13,0.2)'>
     <div class='row pb-4'>
       <div class='col-6 text-right'>
         <%= attachment_image_tag @user, :profile_image, :fill, 100, 100, fallback: "no_image.jpg", class:'rounded-circle' %>
@@ -53,11 +41,29 @@
         　被閲覧：<%= @user.be_favorites_count %>件
         </div>
       </div>
-
       <div class='px-2'>
         <p class='mb-2'>introduction</p>
         <%= @user.introduction %>
       </div>
     </div>
   </div>
+
+  <% if @user.articles.present? || @user.article_bookmarks.present? %>
+    <div>
+      <%= form_with url: user_path(@user), method: :get do |f| %>
+        <div id="top-tags">
+          <div id="category-names" data-json="<%= @category_names.to_json %>"></div>
+          <%= javascript_pack_tag 'top_tags_vue' %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "検索", style:'display: none;', id:"search-btn" %>
+        </div>
+      <% end %>
+      <div class='bg-light p-2' style='border: 1px solid rgba(16,15,13,0.2)'>
+        <div class='results border bg-white' style='border-radius: 15%;'>
+          <%= render 'layouts/amcharts', results: @results, user: @user %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>

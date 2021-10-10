@@ -22,7 +22,7 @@ class ArticlesController < ApplicationController
           @category = Category.find_by(name: params[:category_name])
           @articles = @tag.articles.where(category_id: @category.id).order(id: 'DESC')
         end
-        duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.sum
+        duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
       else
         @tags = Tag.where(name: @tag_names)
         @category = Category.find_by(name: params[:category_name])
@@ -40,7 +40,7 @@ class ArticlesController < ApplicationController
         # @articles = Kaminari.paginate_array(articles).page(params[:page]).per(7)
 
         results_articles = Article.where(id: hash_article_ids.keys)
-        duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.sum
+        duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
       end
       if duplicate_tag_names != 0
         itself_tag_names  = duplicate_tag_names.group_by(&:itself)
