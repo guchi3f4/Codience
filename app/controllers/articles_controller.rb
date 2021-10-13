@@ -6,12 +6,15 @@ class ArticlesController < ApplicationController
     @category_names = Category.pluck(:name)
     @article_comment = ArticleComment.new
     @user = @article.user
+    params[:category_name] = '未選択' if params[:category_name].blank?
     @results = Tag.all.map do |tag|
       { tag: tag.name, count: tag.articles.count }
     end
   end
 
   def index
+    @article = Article.new
+    params[:category_name] = '未選択' if params[:category_name].blank?
     @category_names = Category.pluck(:name)
     if params[:content].present?
       @tag_names = params[:content].split(',')
@@ -59,7 +62,6 @@ class ArticlesController < ApplicationController
         @articles = @category.articles.order(id: 'DESC')
         @results = @category.category_tags.map { |category_tag| { tag: category_tag.tag.name, count: category_tag.registration_count } }
       else
-        @article = Article.new
         @articles = Article.order(id: 'DESC')
         @results = Tag.all.map { |tag| { tag: tag.name, count: tag.articles.count } }
       end

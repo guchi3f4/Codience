@@ -23,6 +23,16 @@
     </div>
     <!-- メインコンテンツ -->
     <div class='col-md-8'>
+      <% if params[:category_name].blank? %>
+        <div id='json_category_name' data-json='<%= '未選択'.to_json %>'></div>
+      <% else %>
+        <div id='json_category_name' data-json='<%= params[:category_name].to_json %>'></div>
+      <% end %>
+      <% if @tag_names.blank? %>
+        <div id='json_tag_names' data-json='<%= [].to_json %>'></div>
+      <% else %>
+        <div id='json_tag_names' data-json='<%= @tag_names.to_json %>'></div>
+      <% end %>
       <!-- 検索フォーム -->
       <%= form_with url: bookmarks_user_path(@user), method: :get, id:'form' do |f| %>
         <div id="search">

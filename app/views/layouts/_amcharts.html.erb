@@ -10,7 +10,8 @@
     <% end %>
   </div>
 <% end %>
-
+<div id="json-category-name" data-json="<%= params[:category_name].to_json %>"></div>
+<div id="json-user-id" data-json="<%= @user.id.to_json if defined?(@user)%>"></div>
 <div id='tag_info' data-json='<%= results.to_json %>'></div>
 <div id='chartdiv'></div>
 
@@ -21,7 +22,7 @@
     // Themes begin
     am4core.useTheme(am4themes_animated);
     // Themes end
-
+    const path = location.pathname
     const chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
     chart.fontFamily = "Courier New";
     const series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
@@ -29,9 +30,12 @@
     series.rotationThreshold = 0.5;
 
     series.data = JSON.parse(document.getElementById('tag_info').dataset.json);
-
     series.dataFields.word = "tag";
     series.dataFields.value = "count";
+    series.category = JSON.parse(document.getElementById('json-category-name').dataset.json);
+    if (path.includes('posts') || path.includes('bookmarks')) {
+      series.user = JSON.parse(document.getElementById('json-user-id').dataset.json);
+    }
 
     series.maxFontSize = am4core.percent(20);
     series.minFontSize = am4core.percent(5);
@@ -44,15 +48,20 @@
         "dataField": "value",
     });
 
-    const path = location.pathname
     if (path.includes('articles') || path.includes('posts') || path.includes('bookmarks')) {
       series.width = am4core.percent(100);
       series.height = am4core.percent(90);
       series.valign = "top";
     }
 
-    series.labels.template.url = "https://e367016fe1e844c2b818277d30c8f55c.vfs.cloud9.us-east-1.amazonaws.com/books?tag={word}";
-    series.labels.template.tooltipText = "{word}: {value}";
+    if (path.includes('articles')) {
+      series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/articles?content={word}&category_name={category}";
+    } else if (path.includes('posts')) {
+      series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/users/{user}/posts?content={word}&category_name={category}"
+    } else if (path.includes('bookmarks')) {
+      series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/users/{user}/bookmarks?content={word}&category_name={category}"
+    }
+    series.labels.template.tooltipText = "{category}: {word}: {value}件";
 
     const hoverState = series.labels.template.states.create("hover");
     hoverState.properties.fill = am4core.color("#FF0000");

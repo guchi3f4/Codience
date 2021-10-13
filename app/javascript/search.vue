@@ -41,28 +41,15 @@
         return {
           newTag: '',
           categories: JSON.parse(document.getElementById('category-names').dataset.json),
-          tags: [],
+          tags: JSON.parse(document.getElementById('json_tag_names').dataset.json),
           allTags: [],
           open: false,
           error: '',
-          selectedCategory: '未選択'
+          selectedCategory: JSON.parse(document.getElementById('json_category_name').dataset.json)
         }
     },
 
     methods: {
-      // setTopTag: function (event) {
-      //   if (event.keyCode !== 13 || this.newTopTag == '') return
-      //   let topTag = this.newTopTag;
-      //   this.topTags.push(topTag);
-      //   this.newTopTag = '';
-      //   setTimeout(() => {
-      //     this.topOpen = false;
-      //   }, 300)
-      // },
-      // delTopTag: function(topTag) {
-      //   this.topTags.splice(this.topTags.indexOf(topTag), 1);
-      // },
-
       // エンターキー押下時
       setTag: function (event) {
         if (event.keyCode !== 13 || this.newTag === '') return

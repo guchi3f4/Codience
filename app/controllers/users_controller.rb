@@ -47,6 +47,7 @@ class UsersController < ApplicationController
 
   def posts
     @user = User.find(params[:id])
+    params[:category_name] = '未選択' if params[:category_name].blank?
     @category_names = Category.pluck(:name)
     if params[:content].present?
       @tag_names = params[:content].split(',')
@@ -120,6 +121,7 @@ class UsersController < ApplicationController
 
   def bookmarks
     @user = User.find(params[:id])
+    params[:category_name] = '未選択' if params[:category_name].blank?
     @article_bookmarks_ids = @user.article_bookmarks.pluck(:article_id)
     @category_names = Category.pluck(:name)
     if params[:content].present?
