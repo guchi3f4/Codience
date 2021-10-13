@@ -1,3 +1,29 @@
+<%= hidden_field_tag :sort_flag, params[:sort_flag], id:'hidden-form', form:'form'%>
+
+<div class='mb-1'>
+  <% if defined?(@tag_names) && @tag_names.count >= 2 %>
+    <%= submit_tag '関連度順', form:'form', class:"relevance-submit btn btn-link font-italic #{ 'text-dark' if params[:sort_flag] == '関連度順' }" %>
+  <% end %>
+  <%= submit_tag '新着順', form:'form', class:"new-submit btn btn-link font-italic #{ 'text-dark' if params[:sort_flag] == '新着順' }" %>
+  <%= submit_tag 'いいね順', form:'form', class:"favorite-submit btn btn-link font-italic #{ 'text-dark' if params[:sort_flag] == 'いいね順' }" %>
+  <%= submit_tag 'ブックマーク順', form:'form', class:"bookmark-submit btn btn-link font-italic #{ 'text-dark' if params[:sort_flag] == 'ブックマーク順' }" %>
+</div>
+
+<script>
+  $(".relevance-submit").on("click", function(e){
+    document.getElementById('hidden-form').value = '関連度順';
+  });
+  $(".new-submit").on("click", function(e){
+    document.getElementById('hidden-form').value = '新着順';
+  });
+  $(".favorite-submit").on("click", function(e){
+    document.getElementById('hidden-form').value = 'いいね順';
+  });
+  $(".bookmark-submit").on("click", function(e){
+    document.getElementById('hidden-form').value = 'ブックマーク順';
+  });
+</script>
+
 <% articles.each do |article| %>
   <%= render 'articles/show', article: article %>
 <% end %>

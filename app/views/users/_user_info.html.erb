@@ -32,13 +32,13 @@
     <div class='row font-weight-bold' style='color: #45494D'>
       <div class='col-5 offset-1 border-bottom py-2'>
         <span class='font-italic'>投稿</span><br>
-        <%= link_to posts_user_path(user) do %>
+        <%= link_to posts_user_path(user), "data-turbolinks": false do %>
           <%= user.articles.count %>
         <% end %>
       </div>
       <div class='col-5 border-bottom py-2'>
         <span class='font-italic'>ブックマーク</span><br>
-        <%= link_to bookmarks_user_path(user) do %>
+        <%= link_to bookmarks_user_path(user), "data-turbolinks": false do %>
           <%= user.article_bookmarks.count %>
         <% end %>
       </div>

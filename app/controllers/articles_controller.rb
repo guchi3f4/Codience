@@ -3,6 +3,7 @@ class ArticlesController < ApplicationController
 
   def show
     @article = Article.find(params[:id])
+    @category_names = Category.pluck(:name)
     @article_comment = ArticleComment.new
     @user = @article.user
     @results = Tag.all.map do |tag|
@@ -42,6 +43,7 @@ class ArticlesController < ApplicationController
         results_articles = Article.where(id: hash_article_ids.keys)
         duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
       end
+
       if duplicate_tag_names != 0
         itself_tag_names  = duplicate_tag_names.group_by(&:itself)
         hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
@@ -50,6 +52,7 @@ class ArticlesController < ApplicationController
       else
         @results = @category.category_tags.map { |category_tag| { tag: category_tag.tag.name, count: category_tag.registration_count } }
       end
+
     else
       if params[:category_name].present? && params[:category_name] != '未選択'
         @category = Category.find_by(name: params[:category_name])
@@ -61,13 +64,33 @@ class ArticlesController < ApplicationController
         @results = Tag.all.map { |tag| { tag: tag.name, count: tag.articles.count } }
       end
     end
+
+    case params[:sort_flag]
+    when 'いいね順' then
+      @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }
+    when 'ブックマーク順' then
+      @articles = @articles.sort{ |a,b| b.article_bookmarks.size <=> a.article_bookmarks.size }
+    when '新着順'then
+      if ( defined?(@tag_names) && @tag_names.count >= 2 )
+        @articles = Article.where(id: select_article_ids.keys).order(id: 'DESC')
+      end
+    when '関連度順' then
+      if ( defined?(@tag_names) && @tag_names.count == 1 )
+        params[:sort_flag] = '新着順'
+      end
+    when nil then
+      params[:sort_flag] = '新着順'
+    end
   end
 
   def new
     @article = Article.new
+    @category_names = Category.pluck(:name)
+    # @select_category_names = Category.all.map { |category| [category.name, category.name]}
   end
 
   def create
+    @category_names = Category.pluck(:name)
     ApplicationRecord.transaction do
       @category = Category.find_or_create_by(name: params[:category_name])
       sent_tags = params[:tag_names].split(',')
@@ -83,22 +106,21 @@ class ArticlesController < ApplicationController
     redirect_to article_path(@article)
 
   rescue ActiveRecord::RecordInvalid
-    if request.referer.include?('/articles/new')
-      render :new
-    else
-      @articles = Article.order(id: 'DESC')
-      render :index
-    end
+    @article_category_name = params[:category_name]
+    @json_tag_names = params[:tag_names].split(',')
+    render :new
   end
 
   def edit
-    @category = @article.category
-    @tag_names = @article.tags.pluck(:name)
-    @join_tag_names = @tag_names.join(',')
+    @article_category_name = @article.category.name
+    @category_names = Category.pluck(:name)
+    @json_tag_names = @article.tags.pluck(:name)
   end
 
   def update
     ApplicationRecord.transaction do
+      @category_names = Category.pluck(:name)
+
       @before_category = @article.category
       @before_category_tags = @before_category.category_tags.where(tag_id: @article.tags)
       @before_category_tags.map do |category_tag|
@@ -117,6 +139,8 @@ class ArticlesController < ApplicationController
     end
     redirect_to article_path(@article)
   rescue ActiveRecord::RecordInvalid
+    @article_category_name = params[:category_name]
+    @json_tag_names = params[:tag_names].split(',')
     render :edit
   end
 

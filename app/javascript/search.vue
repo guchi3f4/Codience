@@ -11,19 +11,19 @@
       </div>
     </div>
 
-    <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="content">
-    <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
+    <input type="hidden" id="tag-names" class="form-control" v-model="tags" name="content">
+    <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1" @click='inputField'>
       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
         {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>
       </div>
-      <input id="field" class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"
+      <input id="search-field" class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"
       @input='onInput' autocomplete="off">
     </div>
 
     <!--補完部分の表示-->
     <div v-if="allTags.length && open">
-      <div class='d-flex mt-2 p-2 border '>
-        <div v-for="(tag2, index) in allTags" id='select-tags' class ="btn btn-primary rounded-pill mr-1 py-0"
+      <div class='d-flex flex-wrap mt-2 p-2 border'>
+        <div v-for="(tag2, index) in allTags" id='select-tags' class ="btn btn-primary rounded-pill mr-1 mb-1 py-0"
           @click='selectTag(index)' v-bind:key="tag2.index" style="cursor: pointer">
           {{tag2}}
         </div>
@@ -83,6 +83,10 @@
         this.tags.splice(this.tags.indexOf(tag), 1);
       },
 
+      inputField: function() {
+        document.getElementById("search-field").focus();
+      },
+
       // 補完情報の取得
       onInput({target}) {
         this.newTag = target.value
@@ -122,14 +126,14 @@
         setTimeout(() => {
           document.getElementById("search-btn").click();
         }, 1)
-        document.getElementById("field").focus()
+        document.getElementById("search-field").focus()
       },
 
       tags: function() {
         setTimeout(() => {
           document.getElementById("search-btn").click();
         }, 1)
-        document.getElementById("field").focus()
+        document.getElementById("search-field").focus()
       }
     }
   }

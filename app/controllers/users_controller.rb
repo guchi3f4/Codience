@@ -30,6 +30,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.order(id: 'DESC')
+    @category_names = Category.pluck(:name)
     @article = Article.new
   end
 
@@ -94,6 +95,23 @@ class UsersController < ApplicationController
       @results = sort_tag_names.map { |key, value| { tag: key, count: value } }
     end
 
+    case params[:sort_flag]
+    when 'いいね順' then
+      @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }
+    when 'ブックマーク順' then
+      @articles = @articles.sort{ |a,b| b.article_bookmarks.size <=> a.article_bookmarks.size }
+    when '新着順'then
+      if ( defined?(@tag_names) && @tag_names.count >= 2 )
+        @articles = Article.where(id: select_article_ids.keys).order(id: 'DESC')
+      end
+    when '関連度順' then
+      if ( defined?(@tag_names) && @tag_names.count == 1 )
+        params[:sort_flag] = '新着順'
+      end
+    when nil then
+      params[:sort_flag] = '新着順'
+    end
+
     respond_to do |format|
       format.html
       format.js { render 'articles/index' }
@@ -151,6 +169,23 @@ class UsersController < ApplicationController
       hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
       sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
       @results = sort_tag_names.map { |key, value| { tag: key, count: value } }
+    end
+
+    case params[:sort_flag]
+    when 'いいね順' then
+      @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }
+    when 'ブックマーク順' then
+      @articles = @articles.sort{ |a,b| b.article_bookmarks.size <=> a.article_bookmarks.size }
+    when '新着順'then
+      if ( defined?(@tag_names) && @tag_names.count >= 2 )
+        @articles = Article.where(id: select_article_ids.keys).order(id: 'DESC')
+      end
+    when '関連度順' then
+      if ( defined?(@tag_names) && @tag_names.count == 1 )
+        params[:sort_flag] = '新着順'
+      end
+    when nil then
+      params[:sort_flag] = '新着順'
     end
 
     respond_to do |format|

@@ -1,26 +1,37 @@
-<h3 class="my-3">New Article</h3>
-<%= form_with model: article, local:true do |f| %>
+<%= form_with model: @article, local:true do |f| %>
   <div class="form-group">
-    <%= f.label :title, 'Title' %>
+    <%= f.label :title, 'Title', class:'font-weight-bold' %>
     <%= f.text_field :title, class:"form-control" %>
   </div>
-  <div class="form-group">
-    <%= f.label :link, 'Link' %>
-    <%= f.text_field :link, class:"form-control" %>
+
+  <div class="form-group col-10 px-0">
+      <%= f.label :link, 'Link', class:'font-weight-bold' %>
+      <%= f.text_field :link, class:"form-control" %>
   </div>
-  <div class="form-group">
-    <%= f.label :body, 'Body' %>
-    <%= f.text_area :body, class:"form-control", 'style':'height: 100px;' %>
+
+  <div class='form-group px-0'>
+    <%= label_tag :category_name, 'Category', class:'font-weight-bold' %><br>
+    <%= select_tag :category_name, options_for_select([['選択してください', '']] + @category_names, @article_category_name),
+    class:'badge border border-success text-success py-2 font-weight-bold', style:'font-size: 15px; min-width: 40%;' %>
   </div>
-  <div class='form-group'>
-    <%= label_tag :category_name,'Category' %>
-    <%= text_field_tag :category_name, params[:category_name], class:"form-control" %>
+
+  <div id='post-tags'>
+    <% if defined?(@json_tag_names) %>
+      <div id="json_tag_names" data-json="<%= @json_tag_names.to_json %>"></div>
+    <% end %>
+    <%= javascript_pack_tag 'post_tags_vue' %>
   </div>
+
   <div class="form-group">
-    <%= label_tag :tag_names,'Tag' %>
-    <%= text_field_tag :tag_names, params[:tag_names], class:"form-control" %>
+    <%= f.label :body, 'Body', class:'font-weight-bold' %>
+    <%= f.text_area :body, class:"form-control", rows:'8' %>
   </div>
-  <div class="form-group">
-    <%= f.button "Create Book", type:"button", onclick:"submit();", class:"btn btn-success" %>
+
+  <div class="form-group mt-4">
+    <% if current_page?(action: 'index') %>
+      <button class='btn btn-success' type="button" onclick="submit(); ">Create Article</button>
+    <% else %>
+      <button class='btn btn-success' type="button" onclick="submit(); ">Update Article</button>
+    <% end %>
   </div>
 <% end %>

@@ -1,7 +1,8 @@
 <div class="col-lg-6 col-md-8 mx-auto border px-5" style='height: 750px; padding-top: 8%;'>
   <h2 class='mb-4'>User info</h2>
-  <%= render 'layouts/error', obj: @user %>
-
+  <div class='error'>
+    <%= render 'layouts/error', obj: @user %>
+  </div>
   <%= form_with model: @user, local:true do |f| %>
   <div class="form-group">
     <%= f.label :name, 'Name' %>

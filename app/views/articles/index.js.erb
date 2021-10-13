@@ -1,2 +1,3 @@
+$(".index-head").html("<%= j(render 'articles/index_head') %>");
 $(".article-list").html("<%= j(render 'articles/index', articles: @articles) %>");
 $(".results").html("<%= j(render 'layouts/amcharts', results: @results) %>");

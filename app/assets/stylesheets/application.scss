@@ -16,3 +16,18 @@
 @import "bootstrap";
 @import 'font-awesome-sprockets';
 @import 'font-awesome';
+
+.text-line {
+	display: flex;
+	align-items: center;
+	padding-top: 10px;
+}
+
+.text-line:before,
+.text-line:after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  background: #000;
+  margin: 1px;
+}
