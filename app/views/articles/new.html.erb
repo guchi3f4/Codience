@@ -1,7 +1,11 @@
-<div class='col-md-10 col-lg-8 mx-auto py-5 px-5 border'>
-  <h2 class="mb-5">New Article</h2>
-  <div class='error'>
-    <%= render 'layouts/error', obj: @article %>
+<div class='pattern-cross-dots-lg'>
+  <div style='background: rgba(255,255,255,0.80);'>
+    <div class='col-md-10 col-lg-8 mx-auto py-5 px-5 border bg-white shadow-lg'>
+      <h2 class="mb-5">New Article</h2>
+      <div class='error'>
+        <%= render 'layouts/error', obj: @article %>
+      </div>
+        <%= render 'articles/article_form', article: @article %>
+    </div>
   </div>
-    <%= render 'articles/article_form', article: @article %>
 </div>

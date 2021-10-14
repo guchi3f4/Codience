@@ -1,10 +1,14 @@
-<div class='container py-5 border px-5' style='min-height: 750px'>
-  <h2 class='mb-4'>Follower Users</h2>
-  <div class='row align-items-stretch mt-4'>
-    <% @users.each do |user| %>
-      <div class='col-4 mb-3 px-2'>
-        <%= render 'users/user_info', user: user %>
+<div class='pattern-cross-dots-lg'>
+  <div style='background: rgba(255,255,255,0.80);'>
+    <div class='container py-5 border shadow bg-white px-5' style='min-height: 750px'>
+      <h2 class='mb-4'>Follower Users</h2>
+      <div class='row align-items-stretch mt-4'>
+        <% @users.each do |user| %>
+          <div class='col-4 mb-3 px-2'>
+            <%= render 'users/user_info', user: user %>
+          </div>
+        <% end %>
       </div>
-    <% end %>
+    </div>
   </div>
 </div>

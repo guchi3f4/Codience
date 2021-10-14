@@ -24,6 +24,10 @@ class User < ApplicationRecord
     articles.map { |article| article.article_favorites.count }.sum
   end
 
+  def be_bookmarks_count
+    articles.map { |article| article.article_bookmarks.count }.sum
+  end
+
   def following?(user)
     following.include?(user)
   end
