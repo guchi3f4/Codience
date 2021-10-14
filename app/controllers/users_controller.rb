@@ -4,18 +4,24 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @category_names = Category.pluck(:name)
+    params[:option] = 'ブックマーク' if params[:option].blank?
+    params[:category_name] = '未選択' if params[:category_name].blank?
     @category = Category.find_by(name: params[:category_name])
-    if @user.articles.present?
-      if params[:category_name].present? && params[:category_name] != '未選択'
-        post_tag_names = @user.articles.where(category_id: @category.id).map { |article| article.tags.pluck(:name) }.flatten
-        article_ids = @user.article_bookmarks.pluck(:article_id)
-        bookmark_tag_names = Article.where(id: article_ids, category_id: @category.id).map { |article| article.tags.pluck(:name) }.flatten
-        duplicate_tag_names = post_tag_names + bookmark_tag_names
+    if @user.articles.present? || @user.bookmarks.present?
+      if params[:option] == '投稿'
+        if params[:category_name] == '未選択'
+          duplicate_tag_names = @user.articles.map { |article| article.tags.pluck(:name) }.flatten
+        else
+          duplicate_tag_names = @user.articles.where(category_id: @category.id).map { |article| article.tags.pluck(:name) }.flatten
+        end
       else
-        post_tag_names = @user.articles.map { |article| article.tags.pluck(:name) }.flatten
-        article_ids = @user.article_bookmarks.pluck(:article_id)
-        bookmark_tag_names = Article.where(id: article_ids).map { |article| article.tags.pluck(:name) }.flatten
-        duplicate_tag_names = post_tag_names + bookmark_tag_names
+        if params[:category_name] == '未選択'
+          article_ids = @user.article_bookmarks.pluck(:article_id)
+          duplicate_tag_names = Article.where(id: article_ids).map { |article| article.tags.pluck(:name) }.flatten
+        else
+          article_ids = @user.article_bookmarks.pluck(:article_id)
+          duplicate_tag_names = Article.where(id: article_ids, category_id: @category.id).map { |article| article.tags.pluck(:name) }.flatten
+        end
       end
       itself_tag_names  = duplicate_tag_names.group_by(&:itself)
       hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h

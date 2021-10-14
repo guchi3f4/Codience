@@ -10,8 +10,9 @@
     <% end %>
   </div>
 <% end %>
-<div id="json-category-name" data-json="<%= params[:category_name].to_json %>"></div>
-<div id="json-user-id" data-json="<%= @user.id.to_json if defined?(@user)%>"></div>
+<div id='json-option' data-json='<%= params[:option].to_json %>'></div>
+<div id='json-category-name' data-json='<%= params[:category_name].to_json %>'></div>
+<div id='json-user-id' data-json='<%= @user.id.to_json if defined?(@user)%>'></div>
 <div id='tag_info' data-json='<%= results.to_json %>'></div>
 <div id='chartdiv'></div>
 
@@ -33,7 +34,7 @@
     series.dataFields.word = "tag";
     series.dataFields.value = "count";
     series.category = JSON.parse(document.getElementById('json-category-name').dataset.json);
-    if (path.includes('posts') || path.includes('bookmarks')) {
+    if ((path.includes('articles') == false) && (path != '/')) {
       series.user = JSON.parse(document.getElementById('json-user-id').dataset.json);
     }
 
@@ -41,11 +42,11 @@
     series.minFontSize = am4core.percent(5);
 
     series.heatRules.push({
-        "target": series.labels.template,
-        "property": "fill",
-        "min": am4core.color("#0000CC"),
-        "max": am4core.color("#CC00CC"),
-        "dataField": "value",
+      "target": series.labels.template,
+      "property": "fill",
+      "min": am4core.color("#0000CC"),
+      "max": am4core.color("#CC00CC"),
+      "dataField": "value",
     });
 
     if (path.includes('articles') || path.includes('posts') || path.includes('bookmarks')) {
@@ -54,14 +55,15 @@
       series.valign = "top";
     }
 
-    if (path.includes('articles')) {
-      series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/articles?content={word}&category_name={category}";
-    } else if (path.includes('posts')) {
+    const option = document.getElementById('json-option')
+    if (path.includes('posts') || (JSON.parse(option.dataset.json) == '投稿')) {
       series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/users/{user}/posts?content={word}&category_name={category}"
-    } else if (path.includes('bookmarks')) {
+    } else if (path.includes('bookmarks') || (JSON.parse(option.dataset.json) == 'ブックマーク')) {
       series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/users/{user}/bookmarks?content={word}&category_name={category}"
+    } else {
+      series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/articles?content={word}&category_name={category}";
     }
-    series.labels.template.tooltipText = "{category}: {word}: {value}件";
+    series.labels.template.tooltipText = "{category}: {word}　{value}件";
 
     const hoverState = series.labels.template.states.create("hover");
     hoverState.properties.fill = am4core.color("#FF0000");

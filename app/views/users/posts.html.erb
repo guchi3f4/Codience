@@ -14,11 +14,13 @@
           <%= render 'users/user_info_head', user: @user %>
           <%= render 'users/user_info', user: @user %>
         </div>
-        <!--新規投稿フォーム-->
-        <div class='new-article-form'>
-          <h3 class="my-3">New Article</h3>
+        <% if user_signed_in? %>
+          <!--新規投稿フォーム-->
+          <div class='new-article-form'>
+            <h3 class="my-3">New Article</h3>
             <%= render 'articles/article_form', article: @article %>
-        </div>
+          </div>
+        <% end %>
       </div>
     </div>
     <!-- メインコンテンツ -->

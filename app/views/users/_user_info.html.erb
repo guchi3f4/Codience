@@ -9,9 +9,11 @@
       <%= link_to user_path(user) do %>
         <p class='font-weight-bold text-dark pt-1 mb-2 <%='mt-2' if user == current_user%>' style='font-size: 18px' ><%= user.name %></p>
       <% end %>
-      <div class='user-follow<%= user.id %>'>
-        <%= render 'users/user_follow', user: user %>
-      </div>
+      <% if user_signed_in? %>
+        <div class='user-follow<%= user.id %>'>
+          <%= render 'users/user_follow', user: user %>
+        </div>
+      <% end %>
     </div>
   </div>
   <div>

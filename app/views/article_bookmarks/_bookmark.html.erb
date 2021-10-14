@@ -1,9 +1,13 @@
-<% if article.bookmarked_by?(current_user) %>
+<% if user_signed_in? %>
+  <% if article.bookmarked_by?(current_user) %>
     <%= link_to article_article_bookmarks_path(article), method: :delete, class: 'text-danger', remote:true do %>
       <i class="far fa-bookmark"></i> <%= article.article_bookmarks.count %>
     <% end %>
-<% else %>
+  <% else %>
     <%= link_to article_article_bookmarks_path(article), method: :post, remote:true do %>
       <i class="far fa-bookmark"></i> <%= article.article_bookmarks.count %>
     <% end %>
+  <% end %>
+<% else %>
+  <i class="far fa-bookmark text-primary"></i><span class='text-primary'> <%= article.article_bookmarks.count %></span>
 <% end %>

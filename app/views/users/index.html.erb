@@ -1,31 +1,10 @@
-<div class='container py-5'>
-  <div class='row'>
-    <!-- サイドバー -->
-    <div class='col-md-4'>
-      <div class='col-md-11 px-0'>
-        <!--ユーザー情報-->
-        <div class='user-info'>
-          <%= render 'users/user_info_head', user: current_user %>
-          <%= render 'users/user_info', user: current_user %>
-        </div>
-        <!--新規投稿フォーム-->
-        <div class='new-article-form'>
-          <h3 class="my-3">New Article</h3>
-            <%= render 'articles/article_form', article: @article %>
-        </div>
+<div class='container py-5 border px-5' style='min-height: 750px'>
+  <h2 class='mb-4'>Users</h2>
+  <div class='row align-items-stretch mt-4'>
+    <% @users.each do |user| %>
+      <div class='col-4 mb-3 px-2'>
+        <%= render 'users/user_info', user: user %>
       </div>
-    </div>
-    <!--メインコンテンツ-->
-    <div class='col-md-8'>
-      <!--ユーザー一覧-->
-      <h2 class='mb-3'>Users</h2>
-      <div class='row align-items-stretch'>
-        <% @users.each do |user| %>
-        <div class='col-6 mb-3 px-2'>
-          <%= render 'users/user_info', user: user %>
-        </div>
-        <% end %>
-      </div>
-    </div>
+    <% end %>
   </div>
 </div>

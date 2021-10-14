@@ -7,9 +7,11 @@
       </div>
       <div class='col-6 text-left pt-4'>
         <p class='font-weight-bold pt-1 mb-2 <%='mt-2' if @user == current_user%>' style='font-size: 18px' ><%= @user.name %></p>
-        <div class='user-follow<%= @user.id %>'>
-          <%= render 'users/user_follow', user: @user %>
-        </div>
+        <% if user_signed_in? %>
+          <div class='user-follow<%= @user.id %>'>
+            <%= render 'users/user_follow', user: @user %>
+          </div>
+        <% end %>
       </div>
     </div>
     <div style='font-size: 20px;'>
@@ -51,9 +53,9 @@
   <% if @user.articles.present? || @user.article_bookmarks.present? %>
     <div>
       <%= form_with url: user_path(@user), method: :get do |f| %>
-        <div id="top-tags">
+        <div id="my-tags">
           <div id="category-names" data-json="<%= @category_names.to_json %>"></div>
-          <%= javascript_pack_tag 'top_tags_vue' %>
+          <%= javascript_pack_tag 'my_tags_vue' %>
         </div>
         <div class="form-group">
           <%= f.submit "検索", style:'display: none;', id:"search-btn" %>

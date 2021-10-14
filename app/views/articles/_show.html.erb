@@ -24,11 +24,11 @@
     <div class='col-md-9'><%= article.body.truncate(100, omission: '...') %></div>
   </div>
   <div>
-    Category：<%= link_to articles_path, class:'badge border border-success text-success mr-3', style:"font-size: 100%;" do %>
+    Category：<%= link_to articles_path(category_name: article.category.name), class:'badge border border-success text-success mr-3', style:"font-size: 100%;" do %>
       <%= article.category.name %>
     <% end %>
     Tag：<% article.tags.each do |tag| %>
-      <%= link_to articles_path, class:'badge badge-primary badge-pill mr-1 mb-2', style:"font-size: 100%;" do %>
+      <%= link_to articles_path(content: tag.name, category_name: article.category.name), class:'badge badge-primary badge-pill mr-1 mb-2', style:"font-size: 100%;" do %>
         <%= tag.name %>
       <% end %>
     <% end %>
