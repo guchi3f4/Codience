@@ -203,11 +203,13 @@ class UsersController < ApplicationController
   end
 
   def followers
-    @users  = User.find(params[:id]).followers
+    @user = User.find(params[:id])
+    @users  = @user.followers
   end
 
   def following
-    @users  = User.find(params[:id]).following
+    @user = User.find(params[:id])
+    @users  = @user.following
   end
 
   private

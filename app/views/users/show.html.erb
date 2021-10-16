@@ -1,6 +1,10 @@
 <div class='pattern-cross-dots-lg'>
   <div style='background: rgba(255,255,255,0.80);'>
     <div class='col-md-10 col-lg-8 mx-auto py-5 px-5 border bg-white shadow-lg' style='min-height: 750px;'>
+      <div class='d-flex align-items-center justify-content-center flex-wrap mb-4'>
+        <h1 class='font-weight-bold mr-3' style='font-family: cursive;'>User Page</h1>
+        <h4 class='text-line d-sm-flex font-italic'><%= @user.name%></h4>
+      </div>
       <%= render 'users/user_info_head', user: @user %>
       <div class='py-4 px-2 mb-4 shadow-sm text-center h-100' style='border-radius: 10%; border: 1px solid rgba(16,15,13,0.2)'>
         <div class='row pb-4'>
@@ -42,7 +46,7 @@
               被いいね：<%= @user.be_favorites_count %>件
             </div>
             <div class='col-4 border-bottom py-3'>
-            　被閲覧：<%= @user.be_favorites_count %>件
+            　被ブックマーク：<%= @user.be_bookmarks_count %>件
             </div>
           </div>
           <div class='px-2'>

@@ -48,11 +48,15 @@
     <div class='row font-weight-bold' style='color: #45494D'>
       <div class='col-5 offset-1 border-bottom py-2'>
         <span class='font-italic'>被いいね</span><br>
-        <sapan class='text-primary'><%= user.be_favorites_count %></sapan>
+        <%= link_to posts_user_path(user, sort_flag: 'いいね順') do %>
+          <%= user.be_favorites_count %>
+        <% end %>
       </div>
       <div class='col-5 border-bottom py-2'>
-        <span class='font-italic'>被ブックマーク</span><br>
-        <sapan class='text-primary'><%= user.be_favorites_count %></span>
+        <span class='font-italic' style='font-size: 15px;'>被ブックマーク</span><br>
+        <%= link_to posts_user_path(user, sort_flag: 'ブックマーク順') do %>
+          <%= user.be_bookmarks_count %>
+        <% end %>
       </div>
     </div>
     <div class='px-2'>

@@ -2,11 +2,11 @@
   <div class='d-flex'>
     <h3 class='mb-0' style='font-size: 30px;'>Tags</h3>
     <% if params[:content].present?%>
-      <p class='col-7  mb-0 font-weight-bold font-italic text-line' style='color: #45494D'>関連するタグ</p>
+      <p class='d-flex ml-3 mb-0 font-weight-bold font-italic text-line' style='color: #45494D'>関連するタグ</p>
     <% elsif defined?(@user) && ( current_page?(posts_user_path(@user)) || current_page?(bookmarks_user_path(@user)) ) %>
-      <p class='col-8  mb-0 font-weight-bold font-italic text-line' style='color: #45494D'>登録数が多いタグ</p>
+      <p class='d-flex ml-3  mb-0 font-weight-bold font-italic text-line' style='color: #45494D'>登録数が多いタグ</p>
     <% else %>
-      <p class='col-6  mb-0 font-weight-bold font-italic text-line' style='color: #45494D'>人気のタグ</p>
+      <p class='d-flex ml-3  mb-0 font-weight-bold font-italic text-line' style='color: #45494D'>人気のタグ</p>
     <% end %>
   </div>
 <% end %>
@@ -57,11 +57,11 @@
 
     const option = document.getElementById('json-option')
     if (path.includes('posts') || (JSON.parse(option.dataset.json) == '投稿')) {
-      series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/users/{user}/posts?content={word}&category_name={category}"
+      series.labels.template.url = "/users/{user}/posts?content={word}&category_name={category}"
     } else if (path.includes('bookmarks') || (JSON.parse(option.dataset.json) == 'ブックマーク')) {
-      series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/users/{user}/bookmarks?content={word}&category_name={category}"
+      series.labels.template.url = "/users/{user}/bookmarks?content={word}&category_name={category}"
     } else {
-      series.labels.template.url = "https://e3165de25be242bb9193a4e36e128133.vfs.cloud9.us-east-1.amazonaws.com/articles?content={word}&category_name={category}";
+      series.labels.template.url = "/articles?content={word}&category_name={category}";
     }
     series.labels.template.tooltipText = "{category}: {word}　{value}件";
 

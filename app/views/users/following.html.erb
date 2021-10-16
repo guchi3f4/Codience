@@ -1,7 +1,10 @@
 <div class='pattern-cross-dots-lg'>
   <div style='background: rgba(255,255,255,0.80);'>
     <div class='container py-5 border shadow bg-white px-5' style='min-height: 750px'>
-      <h2 class='mb-4'>Follow Users</h2>
+      <div class='d-flex align-items-center justify-content-center flex-wrap mb-4'>
+        <h1 class='font-weight-bold mr-3' style='font-family: cursive;'>Follow Users</h1>
+        <h4 class='text-line d-sm-flex font-italic'><%= @user.name%></h4>
+      </div>
       <div class='row align-items-stretch'>
         <% @users.each do |user| %>
           <div class='col-4 mb-3 px-2'>

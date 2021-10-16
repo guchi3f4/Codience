@@ -23,7 +23,7 @@
         <div class='col-md-8'>
           <!-- 記事詳細 -->
           <div class="row">
-            <h2 class="col-7 mb-3">Article detail</h2>
+            <h1 class='col-7 mb-4 font-weight-bold' style='font-family: cursive;'>Article Detail</h1>
             <% if @article.user == current_user %>
               <div class="col-5 text-right pt-2 pr-4">
                 <%= link_to "Edit", edit_article_path(@article), class:"btn btn-success btn-sm mr-2" %>

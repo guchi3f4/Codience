@@ -3,11 +3,12 @@
   <% if user == current_user %>
     <div class='col-6 text-right'>
       <%= link_to edit_user_path(user), class:'text-decoration-none' do %>
-        <div class='cricle-btn rounded-circle shadow py-2 px-2 mr-2 text-secondary fas fa-user-cog' style='width: 35px; height: 35px;'></div>
+        <div class='circle-btn rounded-circle shadow py-2 px-2 mr-2 text-secondary fas fa-user-cog' style='width: 35px; height: 35px;'></div>
       <% end %>
       <%= link_to new_article_path, class:'text-decoration-none' do %>
-        <div class='cricle-btn rounded-circle shadow py-2 px-2 text-secondary fas fa-pencil-alt' style='width: 35px; height: 35px;'></div>
+        <div class='circle-btn rounded-circle shadow py-2 px-2 text-secondary fas fa-pencil-alt' style='width: 35px; height: 35px;'></div>
       <% end %>
     </div>
   <% end %>
 </div>
+<div class='cricle-btn'></div>
