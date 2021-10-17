@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class='row mb-2'>
-      <h3 class='col-3 mb-0'>Tags</h3>
-      <div class='col-9 d-flex align-items-center'>
+    <div class='d-md-flex '>
+      <h4 class='col-md-6 text-line d-sm-flex font-weight-bold font-italic'>人気タグ一覧</h4>
+      <div class='col-md-6 d-flex align-items-center'>
         <h5 class='mb-0'>カテゴリ選択：</h5>
         <select class='badge border border-success text-success' style='font-size: 20px;' name='category_name' id='category_name' v-model='selectedCategory'>
           <option>未選択</option>

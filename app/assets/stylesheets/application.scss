@@ -17,6 +17,16 @@
 @import 'font-awesome-sprockets';
 @import 'font-awesome';
 
+.custom-container {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 960px;
+}
+
+img:hover {
+  opacity: 0.8;
+}
+
 .text-line {
 	align-items: center;
 	padding-top: 10px;

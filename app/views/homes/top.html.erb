@@ -1,7 +1,35 @@
-<div class='container'>
-  <h1>ようこそCodienceへ</h1>
-  <div class='col-8 mx-auto'>
-    <%= form_with url: root_path, method: :get do |f| %>
+<div class='top-head-bg text-body text-center d-flex align-items-center justify-content-center'>
+  <div class='d-inline-block p-3' style='background-color: rgba(255,255,255,0.75);'>
+    <h2 class='font-weight-bold mb-0' style='font-family: cursive;'>Welcom to</h2>
+    <h1 class='font-weight-bold pb-2'>CODIENCE</h1>
+    <p class='font-weight-bold'>
+      Codienceはエンジニア、プログラミング学習者向けに<br>
+      参考記事の管理、共有が行えるSNSサイトです。
+    </p>
+  </div>
+</div>
+<div class='row'>
+  <div class='col-md-4 p-4 text-light d-flex flex-column justify-content-center' style='background-color: rgba(13,65,134,1); font-family: YuGothic;'>
+    <h3 class='px-3 pb-4 text-center font-weight-bold border-bottom border-light'>Codienceでできること</h3>
+    <div class='py-4 px-3'>
+      <h4 class='font-weight-bold'>・参考記事のタグ管理</h4>
+      <p class='px-5 pt-2'>
+        参考にした記事がどれだったか分からなくなることはありませんか？<br>
+        Codienceでは記事に任意のタグをつけて管理できます。マイページからいつでも閲覧、検索が可能です。
+      </p>
+    </div>
+    <div class='pb-4 px-3'>
+      <h4 class='font-weight-bold'>・参考記事の検索</h4>
+      <p class='px-5 pt-2'>豊富なタグから条件に合った記事を探せます。検索した記事はブックマークすることで、マイページから閲覧、検索が可能です。</p>
+    </div>
+    <div class='pb-4 px-3 border-bottom border-light'>
+      <h4 class='font-weight-bold'>・参考記事の投稿、共有</h4>
+      <p class='px-5 pt-2'>役立った参考記事を投稿、共有しましょう。共有した記事は、検索結果に反映され当サイトをより便利にいたします。</p>
+      <p class='px-5 font-weight-bold'>あなたの学びがみんなの助けになります。</p>
+    </div>
+  </div>
+  <div class= 'col-md-7 px-0 mx-auto pt-4' >
+   <%= form_with url: root_path, method: :get do |f| %>
       <div id="top-tags">
         <div id="category-names" data-json="<%= @category_names.to_json %>"></div>
         <%= javascript_pack_tag 'top_tags_vue' %>
@@ -10,10 +38,8 @@
         <%= f.submit "検索", style:'display: none;', id:"search-btn" %>
       </div>
     <% end %>
-    <div class='border-dark bg-light p-2' style='border: 2px solid '>
-      <div class='results border border-primary bg-white shadow-sm' style='border-radius: 4%;'>
-        <%= render 'layouts/amcharts', results: @results %>
-      </div>
+    <div class='results top-main-monitor p-3'>
+      <%= render 'layouts/amcharts', results: @results %>
     </div>
   </div>
 </div>
