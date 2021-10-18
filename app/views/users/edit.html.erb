@@ -7,15 +7,15 @@
       </div>
       <%= form_with model: @user, local:true do |f| %>
       <div class="form-group">
-        <%= f.label :name, 'Name' %>
+        <%= f.label :name, 'Name', class:'font-weight-bold'%>
         <%= f.text_field :name, class:"form-control col-md-5" %>
       </div>
       <div class="form-group">
-        <%= f.label :profile_image, 'Image' %>
+        <%= f.label :profile_image, 'Image', class:'font-weight-bold' %>
         <%= f.attachment_field :profile_image, class:"form-control-file" %>
       </div>
       <div class="form-group">
-        <%= f.label :introduction, 'Intoroduciton'%>
+        <%= f.label :introduction, 'Intoroduciton', class:'font-weight-bold'%>
         <%= f.text_area :introduction, class:"form-control", rows:'4' %>
       </div>
       <div class="form-group mt-4">

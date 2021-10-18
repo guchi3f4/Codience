@@ -40,3 +40,21 @@ img:hover {
   margin: 1px;
   width: 40px;
 }
+
+.pagination>li>a {
+  border: none;
+  color: #696969;
+  margin: 0 5px;
+  padding: 5px 10px;
+  background: #fff;
+  border-radius: 15px;
+}
+
+.pagination>.active>a {
+  background: #93c9ff;
+  border-radius: 15px;
+}
+
+.pagination>li>a:hover {
+  border-radius: 15px;
+}
