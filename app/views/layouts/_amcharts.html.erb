@@ -64,12 +64,12 @@
     } else {
       series.labels.template.url = "/articles?content={word}&category_name={category}";
     }
+
     if (series.data[0]['show_count'] == undefined) {
       series.labels.template.tooltipText = "{category}: {word}　{value}件";
     } else {
       series.labels.template.tooltipText = "{category}: {word}　{showValue}件";
     }
-
 
     const hoverState = series.labels.template.states.create("hover");
     hoverState.properties.fill = am4core.color("#FF0000");

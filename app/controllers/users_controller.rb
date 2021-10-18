@@ -55,8 +55,10 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     params[:category_name] = '未選択' if params[:category_name].blank?
     @category_names = Category.pluck(:name)
+    # 検索タグが入力されているか
     if params[:content].present?
       @tag_names = params[:content].split(',')
+      # 検索タグが一つの場合
       if @tag_names.count == 1
         @tag = Tag.find_by(name: params[:content])
         if params[:category_name] == '未選択'
@@ -65,6 +67,8 @@ class UsersController < ApplicationController
           @category = Category.find_by(name: params[:category_name])
           @articles = @tag.articles.where(user_id: @user.id, category_id: @category.id).page(params[:page]).per(6).order(id: 'DESC')
         end
+        duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
+      # 検索タグが2つ以上の場合
       else
         @tags = Tag.where(name: @tag_names)
         @category = Category.find_by(name: params[:category_name])
@@ -80,7 +84,11 @@ class UsersController < ApplicationController
         sort_article_ids = select_article_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
         articles = @user.articles.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
         @articles = Kaminari.paginate_array(articles).page(params[:page]).per(6)
+
+        results_articles = Article.where(id: hash_article_ids.keys)
+        duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
       end
+    # 検索タグが入力されていな場合
     else
       if params[:category_name].present? && params[:category_name] != '未選択'
         @category = Category.find_by(name: params[:category_name])
@@ -89,19 +97,22 @@ class UsersController < ApplicationController
         @article = Article.new
         @articles = @user.articles.page(params[:page]).per(6).order(id: 'DESC')
       end
+      duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
     end
-    if @user.articles.present?
-      if params[:category_name].present? && params[:category_name] != '未選択'
-        duplicate_tag_names = @user.articles.where(category_id: @category.id).map { |article| article.tags.pluck(:name) }.flatten
-      else
-        duplicate_tag_names = @user.articles.map { |article| article.tags.pluck(:name) }.flatten
-      end
-      itself_tag_names  = duplicate_tag_names.group_by(&:itself)
-      hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
-      sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+    # タグクラウドの表示
+    itself_tag_names  = duplicate_tag_names.group_by(&:itself)
+    hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
+    sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+    if defined?(@tag_names) && @tag_names.count >= 2
+      @results = sort_tag_names.map { |key, value|
+        tag = Tag.find_by(name: key)
+        tag_count = tag.articles.where(user_id: @user).count
+        { tag: key, count: value, show_count: tag_count }
+      }
+    else
       @results = sort_tag_names.map { |key, value| { tag: key, count: value } }
     end
-
+    # ソート
     case params[:sort_flag]
     when 'いいね順' then
       @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }
@@ -132,8 +143,10 @@ class UsersController < ApplicationController
     params[:category_name] = '未選択' if params[:category_name].blank?
     @article_bookmarks_ids = @user.article_bookmarks.pluck(:article_id)
     @category_names = Category.pluck(:name)
+    # 検索タグが入力されているか
     if params[:content].present?
       @tag_names = params[:content].split(',')
+      # 検索タグが一つの場合
       if @tag_names.count == 1
         @tag = Tag.find_by(name: params[:content])
         if params[:category_name] == '未選択'
@@ -142,6 +155,8 @@ class UsersController < ApplicationController
           @category = Category.find_by(name: params[:category_name])
           @articles = @tag.articles.where(id: @article_bookmarks_ids, category_id: @category.id).page(params[:page]).per(6).order(id: 'DESC')
         end
+        duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
+      # 検索タグが2つ以上の場合
       else
         @tags = Tag.where(name: @tag_names)
         @category = Category.find_by(name: params[:category_name])
@@ -158,7 +173,11 @@ class UsersController < ApplicationController
         sort_article_ids = select_article_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
         articles = Article.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
         @articles = Kaminari.paginate_array(articles).page(params[:page]).per(6)
+
+        results_articles = Article.where(id: hash_article_ids.keys)
+        duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
       end
+    # 検索タグが入力されていな場合
     else
       if params[:category_name].present? && params[:category_name] != '未選択'
         @category = Category.find_by(name: params[:category_name])
@@ -167,20 +186,22 @@ class UsersController < ApplicationController
         @article = Article.new
         @articles = Article.where(id: @article_bookmarks_ids).page(params[:page]).per(6).order(id: 'DESC')
       end
+      duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
     end
-
-    if @article_bookmarks_ids.present?
-      if params[:category_name].present? && params[:category_name] != '未選択'
-        duplicate_tag_names = Article.where(id: @article_bookmarks_ids, category_id: @category.id).map { |article| article.tags.pluck(:name) }.flatten
-      else
-        duplicate_tag_names = Article.where(id: @article_bookmarks_ids).map { |article| article.tags.pluck(:name) }.flatten
-      end
-      itself_tag_names  = duplicate_tag_names.group_by(&:itself)
-      hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
-      sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+    # タグクラウドの表示
+    itself_tag_names  = duplicate_tag_names.group_by(&:itself)
+    hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
+    sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+    if defined?(@tag_names) && @tag_names.count >= 2
+      @results = sort_tag_names.map { |key, value|
+        tag = Tag.find_by(name: key)
+        tag_count = tag.articles.where(user_id: @user).count
+        { tag: key, count: value, show_count: tag_count }
+      }
+    else
       @results = sort_tag_names.map { |key, value| { tag: key, count: value } }
     end
-
+    # ソート
     case params[:sort_flag]
     when 'いいね順' then
       @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }

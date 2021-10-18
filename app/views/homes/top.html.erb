@@ -1,3 +1,5 @@
+<link rel="preload" href="<%= asset_path('top_head.png') %>" as="image">
+
 <div class='top-head-bg text-body text-center d-flex align-items-center justify-content-center'>
   <div class='d-inline-block p-3' style='background-color: rgba(255,255,255,0.75);'>
     <h2 class='font-weight-bold mb-0' style='font-family: cursive;'>Welcom to</h2>
@@ -9,7 +11,7 @@
   </div>
 </div>
 <div class='row'>
-  <div class='col-md-4 p-4 text-light d-flex flex-column justify-content-center' style='background-color: rgba(13,65,134,1); font-family: YuGothic;'>
+  <div class='col-lg-4 p-4 text-light d-flex flex-column justify-content-center' style='background-color: rgba(13,65,134,1); font-family: YuGothic;'>
     <h3 class='px-3 pb-4 text-center font-weight-bold border-bottom border-light'>Codienceでできること</h3>
     <div class='py-4 px-3'>
       <h4 class='font-weight-bold'>・参考記事のタグ管理</h4>
@@ -28,7 +30,7 @@
       <p class='px-5 font-weight-bold'>あなたの学びがみんなの助けになります。</p>
     </div>
   </div>
-  <div class= 'col-md-7 px-0 mx-auto pt-4' >
+  <div class= 'col-lg-7 px-0 mx-auto pt-4' >
     <%= form_with url: root_path, method: :get do |f| %>
       <div id="top-tags">
         <div id="category-names" data-json="<%= @category_names.to_json %>"></div>
