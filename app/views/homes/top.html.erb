@@ -29,7 +29,7 @@
     </div>
   </div>
   <div class= 'col-md-7 px-0 mx-auto pt-4' >
-   <%= form_with url: root_path, method: :get do |f| %>
+    <%= form_with url: root_path, method: :get do |f| %>
       <div id="top-tags">
         <div id="category-names" data-json="<%= @category_names.to_json %>"></div>
         <%= javascript_pack_tag 'top_tags_vue' %>

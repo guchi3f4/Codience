@@ -27,3 +27,5 @@
 <% articles.each do |article| %>
   <%= render 'articles/show', article: article %>
 <% end %>
+
+<%= paginate articles, remote: true %>

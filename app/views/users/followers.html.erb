@@ -5,12 +5,8 @@
         <h1 class='font-weight-bold mr-3' style='font-family: cursive;'>Follower Users</h1>
         <h4 class='text-line d-sm-flex font-italic'><%= @user.name%></h4>
       </div>
-      <div class='row align-items-stretch mt-4'>
-        <% @users.each do |user| %>
-          <div class='col-4 mb-3 px-2'>
-            <%= render 'users/user_info', user: user %>
-          </div>
-        <% end %>
+      <div class='user-index row align-items-stretch mt-4'>
+        <%= render 'users/index', users: @users %>
       </div>
     </div>
   </div>

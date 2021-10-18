@@ -35,7 +35,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.order(id: 'DESC')
+    @users = User.page(params[:page]).per(9).order(id: 'DESC')
     @category_names = Category.pluck(:name)
     @article = Article.new
   end
@@ -60,10 +60,10 @@ class UsersController < ApplicationController
       if @tag_names.count == 1
         @tag = Tag.find_by(name: params[:content])
         if params[:category_name] == '未選択'
-          @articles = @tag.articles.where(user_id: @user.id).order(id: 'DESC')
+          @articles = @tag.articles.where(user_id: @user.id).page(params[:page]).per(6).order(id: 'DESC')
         else
           @category = Category.find_by(name: params[:category_name])
-          @articles = @tag.articles.where(user_id: @user.id, category_id: @category.id).order(id: 'DESC')
+          @articles = @tag.articles.where(user_id: @user.id, category_id: @category.id).page(params[:page]).per(6).order(id: 'DESC')
         end
       else
         @tags = Tag.where(name: @tag_names)
@@ -78,16 +78,16 @@ class UsersController < ApplicationController
         hash_article_ids = itself_article_ids.map{ |key, value| [key, value.count] }.to_h
         select_article_ids = hash_article_ids.select {|key, value| value >= 2 }
         sort_article_ids = select_article_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
-        @articles = @user.articles.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
-        # @articles = Kaminari.paginate_array(articles).page(params[:page]).per(7)
+        articles = @user.articles.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
+        @articles = Kaminari.paginate_array(articles).page(params[:page]).per(6)
       end
     else
       if params[:category_name].present? && params[:category_name] != '未選択'
         @category = Category.find_by(name: params[:category_name])
-        @articles = @user.articles.where(category_id: @category.id).order(id: 'DESC')
+        @articles = @user.articles.where(category_id: @category.id).page(params[:page]).per(6).order(id: 'DESC')
       else
         @article = Article.new
-        @articles = @user.articles.order(id: 'DESC')
+        @articles = @user.articles.page(params[:page]).per(6).order(id: 'DESC')
       end
     end
     if @user.articles.present?
@@ -105,11 +105,13 @@ class UsersController < ApplicationController
     case params[:sort_flag]
     when 'いいね順' then
       @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }
+      @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
     when 'ブックマーク順' then
       @articles = @articles.sort{ |a,b| b.article_bookmarks.size <=> a.article_bookmarks.size }
+      @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
     when '新着順'then
       if ( defined?(@tag_names) && @tag_names.count >= 2 )
-        @articles = Article.where(id: select_article_ids.keys).order(id: 'DESC')
+        @articles = Article.where(id: select_article_ids.keys).page(params[:page]).per(6).order(id: 'DESC')
       end
     when '関連度順' then
       if ( defined?(@tag_names) && @tag_names.count == 1 )
@@ -135,10 +137,10 @@ class UsersController < ApplicationController
       if @tag_names.count == 1
         @tag = Tag.find_by(name: params[:content])
         if params[:category_name] == '未選択'
-          @articles = @tag.articles.where(id: @article_bookmarks_ids).order(id: 'DESC')
+          @articles = @tag.articles.where(id: @article_bookmarks_ids).page(params[:page]).per(6).order(id: 'DESC')
         else
           @category = Category.find_by(name: params[:category_name])
-          @articles = @tag.articles.where(id: @article_bookmarks_ids, category_id: @category.id).order(id: 'DESC')
+          @articles = @tag.articles.where(id: @article_bookmarks_ids, category_id: @category.id).page(params[:page]).per(6).order(id: 'DESC')
         end
       else
         @tags = Tag.where(name: @tag_names)
@@ -154,16 +156,16 @@ class UsersController < ApplicationController
         hash_article_ids = itself_article_ids.map{ |key, value| [key, value.count] }.to_h
         select_article_ids = hash_article_ids.select {|key, value| value >= 2 }
         sort_article_ids = select_article_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
-        @articles = Article.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
-        # @articles = Kaminari.paginate_array(articles).page(params[:page]).per(7)
+        articles = Article.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
+        @articles = Kaminari.paginate_array(articles).page(params[:page]).per(6)
       end
     else
       if params[:category_name].present? && params[:category_name] != '未選択'
         @category = Category.find_by(name: params[:category_name])
-        @articles = Article.where(id: @article_bookmarks_ids, category_id: @category.id).order(id: 'DESC')
+        @articles = Article.where(id: @article_bookmarks_ids, category_id: @category.id).page(params[:page]).per(6).order(id: 'DESC')
       else
         @article = Article.new
-        @articles = Article.where(id: @article_bookmarks_ids).order(id: 'DESC')
+        @articles = Article.where(id: @article_bookmarks_ids).page(params[:page]).per(6).order(id: 'DESC')
       end
     end
 
@@ -182,11 +184,13 @@ class UsersController < ApplicationController
     case params[:sort_flag]
     when 'いいね順' then
       @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }
+      @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
     when 'ブックマーク順' then
       @articles = @articles.sort{ |a,b| b.article_bookmarks.size <=> a.article_bookmarks.size }
+      @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
     when '新着順'then
       if ( defined?(@tag_names) && @tag_names.count >= 2 )
-        @articles = Article.where(id: select_article_ids.keys).order(id: 'DESC')
+        @articles = Article.where(id: select_article_ids.keys).page(params[:page]).per(6).order(id: 'DESC')
       end
     when '関連度順' then
       if ( defined?(@tag_names) && @tag_names.count == 1 )
@@ -204,12 +208,12 @@ class UsersController < ApplicationController
 
   def followers
     @user = User.find(params[:id])
-    @users  = @user.followers
+    @users  = @user.followers.page(params[:page]).per(6)
   end
 
   def following
     @user = User.find(params[:id])
-    @users  = @user.following
+    @users  = @user.following.page(params[:page]).per(6)
   end
 
   private

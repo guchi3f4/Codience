@@ -33,6 +33,7 @@
     series.data = JSON.parse(document.getElementById('tag_info').dataset.json);
     series.dataFields.word = "tag";
     series.dataFields.value = "count";
+    series.dataFields.showValue = "show_count"
     series.category = JSON.parse(document.getElementById('json-category-name').dataset.json);
     if ((path.includes('articles') == false) && (path != '/')) {
       series.user = JSON.parse(document.getElementById('json-user-id').dataset.json);
@@ -63,7 +64,12 @@
     } else {
       series.labels.template.url = "/articles?content={word}&category_name={category}";
     }
-    series.labels.template.tooltipText = "{category}: {word}　{value}件";
+    if (series.data[0]['show_count'] == undefined) {
+      series.labels.template.tooltipText = "{category}: {word}　{value}件";
+    } else {
+      series.labels.template.tooltipText = "{category}: {word}　{showValue}件";
+    }
+
 
     const hoverState = series.labels.template.states.create("hover");
     hoverState.properties.fill = am4core.color("#FF0000");

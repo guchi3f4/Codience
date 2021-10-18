@@ -21,10 +21,10 @@ class ArticlesController < ApplicationController
       if @tag_names.count == 1
         @tag = Tag.find_by(name: params[:content])
         if params[:category_name] == '未選択'
-          @articles = @tag.articles.order(id: 'DESC')
+          @articles = @tag.articles.page(params[:page]).per(6).order(id: 'DESC')
         else
           @category = Category.find_by(name: params[:category_name])
-          @articles = @tag.articles.where(category_id: @category.id).order(id: 'DESC')
+          @articles = @tag.articles.where(category_id: @category.id).page(params[:page]).per(6).order(id: 'DESC')
         end
         duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
       else
@@ -40,29 +40,31 @@ class ArticlesController < ApplicationController
         hash_article_ids = itself_article_ids.map{ |key, value| [key, value.count] }.to_h
         select_article_ids = hash_article_ids.select {|key, value| value >= 2 }
         sort_article_ids = select_article_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
-        @articles = Article.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
-        # @articles = Kaminari.paginate_array(articles).page(params[:page]).per(7)
+        articles = Article.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
+        @articles = Kaminari.paginate_array(articles).page(params[:page]).per(6)
 
         results_articles = Article.where(id: hash_article_ids.keys)
         duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
       end
-
-      if duplicate_tag_names != 0
-        itself_tag_names  = duplicate_tag_names.group_by(&:itself)
-        hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
-        sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+      itself_tag_names  = duplicate_tag_names.group_by(&:itself)
+      hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
+      sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+      if @tag_names.count == 1
         @results = sort_tag_names.map { |key, value| { tag: key, count: value } }
       else
-        @results = @category.category_tags.map { |category_tag| { tag: category_tag.tag.name, count: category_tag.registration_count } }
+        @results = sort_tag_names.map { |key, value|
+          tag = Tag.find_by(name: key)
+          tag_count = tag.articles.count
+          { tag: key, count: value, show_count: tag_count }
+        }
       end
-
     else
       if params[:category_name].present? && params[:category_name] != '未選択'
         @category = Category.find_by(name: params[:category_name])
-        @articles = @category.articles.order(id: 'DESC')
+        @articles = @category.articles.page(params[:page]).per(6).order(id: 'DESC')
         @results = @category.category_tags.map { |category_tag| { tag: category_tag.tag.name, count: category_tag.registration_count } }
       else
-        @articles = Article.order(id: 'DESC')
+        @articles = Article.page(params[:page]).per(6).order(id: 'DESC')
         @results = Tag.all.map { |tag| { tag: tag.name, count: tag.articles.count } }
       end
     end
@@ -70,11 +72,13 @@ class ArticlesController < ApplicationController
     case params[:sort_flag]
     when 'いいね順' then
       @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }
+      @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
     when 'ブックマーク順' then
       @articles = @articles.sort{ |a,b| b.article_bookmarks.size <=> a.article_bookmarks.size }
+      @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
     when '新着順'then
       if ( defined?(@tag_names) && @tag_names.count >= 2 )
-        @articles = Article.where(id: select_article_ids.keys).order(id: 'DESC')
+        @articles = Article.where(id: select_article_ids.keys).page(params[:page]).per(6).order(id: 'DESC')
       end
     when '関連度順' then
       if ( defined?(@tag_names) && @tag_names.count == 1 )
@@ -123,9 +127,9 @@ class ArticlesController < ApplicationController
     ApplicationRecord.transaction do
       @category_names = Category.pluck(:name)
 
-      @before_category = @article.category
-      @before_category_tags = @before_category.category_tags.where(tag_id: @article.tags)
-      @before_category_tags.map do |category_tag|
+      before_category = @article.category
+      before_category_tags = before_category.category_tags.where(tag_id: @article.tags)
+      before_category_tags.map do |category_tag|
         category_tag.update(registration_count: category_tag.registration_count -= 1)
       end
 
@@ -138,6 +142,9 @@ class ArticlesController < ApplicationController
         category_tag = @category.category_tags.find_or_create_by(tag_id: tag.id)
         category_tag.update(registration_count: category_tag.registration_count += 1)
       end
+
+      tag_ids = ArticleTag.pluck(:tag_id).uniq
+      Tag.where.not(id: tag_ids).destroy_all
     end
     redirect_to article_path(@article)
   rescue ActiveRecord::RecordInvalid
@@ -153,6 +160,10 @@ class ArticlesController < ApplicationController
       category_tag.update(registration_count: category_tag.registration_count -= 1)
     end
     @article.destroy
+
+    tag_ids = ArticleTag.pluck(:tag_id).uniq
+    Tag.where.not(id: tag_ids).destroy_all
+
     redirect_to articles_path
   end
 
