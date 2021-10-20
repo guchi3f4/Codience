@@ -23,7 +23,6 @@ class Article < ApplicationRecord
     if self.tags.present?
       self.tags.destroy_all
     end
-
     sent_tags.map do |tag|
       article_tag = Tag.find_or_create_by(name: tag)
       self.tags << article_tag

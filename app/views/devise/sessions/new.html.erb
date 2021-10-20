@@ -1,9 +1,9 @@
 <div class='pattern-horizontal-lines-lg'>
-  <div class='py-5 px-5' style='background: rgba(250,250,250,0.9); height: 750px;'>
-    <div class='col-5 mx-auto border py-4 px-5 bg-white rounded shadow-lg' style='margin-top: 5%;'>
+  <div class='d-flex align-items-center' style='background: rgba(250,250,250,0.9); height: 750px;'>
+    <div class='mx-auto border py-4 px-5 bg-white rounded shadow-lg' style='width: 560px;'>
 　　<h2 class='pb-3'>Log in</h2>
       <%= form_with model: @user, url: user_session_path, local: true do |f| %>
-        <div class='col-11'>
+        <div>
           <div class="form-group">
             <%= f.label :email, class:'font-weight-bold' %>
             <%= f.email_field :email, autofocus: true, autocomplete: "email", class:'form-control' %>

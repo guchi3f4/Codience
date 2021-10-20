@@ -1,4 +1,4 @@
-<div class='border py-4 px-2 shadow-sm text-center h-100' style='border-radius: 15%;'>
+<div class='border py-4 px-2 shadow-sm text-center h-100 text-nowrap' style='border-radius: 15%;'>
   <div class='row pb-4'>
     <div class='col-6 text-right'>
       <%= link_to user_path(user) do %>
@@ -34,13 +34,13 @@
     <div class='row font-weight-bold' style='color: #45494D'>
       <div class='col-5 offset-1 border-bottom py-2'>
         <span class='font-italic'>投稿</span><br>
-        <%= link_to posts_user_path(user), "data-turbolinks": false do %>
+        <%= link_to posts_user_path(user) do %>
           <%= user.articles.count %>
         <% end %>
       </div>
       <div class='col-5 border-bottom py-2'>
         <span class='font-italic'>ブックマーク</span><br>
-        <%= link_to bookmarks_user_path(user), "data-turbolinks": false do %>
+        <%= link_to bookmarks_user_path(user) do %>
           <%= user.article_bookmarks.count %>
         <% end %>
       </div>

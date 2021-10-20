@@ -1,13 +1,10 @@
 <div class='pattern-cross-dots-lg'>
   <div style='background: rgba(235,235,235,0.70);'>
-    <div class='container-lg py-5 px-4 bg-white border shadow'>
-      <div class='article-error'>
-        <%= render 'layouts/error', obj: @article_comment %>
-      </div>
-      <div class='row'>
+    <div class='container-lg py-5 px-3 px-md-4 bg-white border shadow'>
+      <div class='row flex-md-row flex-column-reverse'>
         <!-- サイドバー -->
-        <div class='col-md-4'>
-          <div class='col-md-11 px-0'>
+        <div class='col-md-5 col-lg-4'>
+          <div class='col-md-12 px-0 d-flex flex-column-reverse flex-md-column'>
             <!--amcharts タグ表示-->
             <div class='results pb-2'>
               <%= render 'layouts/amcharts', results: @results %>
@@ -20,12 +17,12 @@
           </div>
         </div>
         <!-- メインコンテンツ -->
-        <div class='col-md-8'>
+        <div class='col-md-7 col-lg-8'>
           <!-- 記事詳細 -->
           <div class="row">
             <h1 class='col-7 mb-4 font-weight-bold' style='font-family: cursive;'>Article Detail</h1>
             <% if @article.user == current_user %>
-              <div class="col-5 text-right pt-2 pr-4">
+              <div class="col-5 text-right text-nowrap pt-2 pr-4">
                 <%= link_to "Edit", edit_article_path(@article), class:"btn btn-success btn-sm mr-2" %>
                 <%= link_to "Destroy", article_path(@article), method: :delete, "data-confirm" => "本当に削除しますか？", class:"btn btn-danger btn-sm" %>
               </div>
@@ -36,6 +33,9 @@
           </div>
           <!--記事コメントフォーム-->
           <div>
+            <div class='article-error'>
+              <%= render 'layouts/error', obj: @article_comment %>
+            </div>
             <h3>Comments</h3>
             <%= form_with model: [@article, @article_comment] do |f| %>
               <div class="form-group">

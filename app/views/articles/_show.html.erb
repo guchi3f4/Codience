@@ -1,30 +1,31 @@
-<div class='container rounded py-3 mb-3' style='border: 2px solid lightgray;' onMouseOut="this.style.boxShadow='';" onMouseOver="this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.2)'">
+<div class='container-md rounded py-3 mb-3' style='border: 2px solid lightgray;' onMouseOut="this.style.boxShadow='';" onMouseOver="this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.2)'">
   <%= link_to article_path(article), class:'text-dark' do %>
     <h5 class='font-weight-bold'><%= article.title%></h5>
   <% end %>
   <div class='row border-bottom pb-2'>
-    <div class='col-9 text-truncate'>
-      Link: <%= link_to article.link do %>
+    <div class='col-8 col-sm-9 text-truncate'>
+      <i class="fas fa-link"></i>
+      <%= link_to article.link do %>
         <%= article.link %>
       <% end %>
     </div>
-    <div class='col-2 text-right favorite-btn<%= article.id %>'>
+    <div class='col-2 pl-0 text-right text-nowrap favorite-btn<%= article.id %>'>
       <%= render 'article_favorites/favorite', article: article %>
     </div>
-    <div class='col-1 px-0 bookmark-btn<%= article.id %>'>
+    <div class=' col-2 col-sm-1 px-0 text-nowrap  bookmark-btn<%= article.id %>'>
       <%= render 'article_bookmarks/bookmark', article: article %>
     </div>
   </div>
   <div class='row mb-2 py-2'>
-    <div class='col-md-3'>
+    <div class='col-md-2'>
       <%= link_to user_path(article.user) do %>
         <%= attachment_image_tag article.user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg", class:'rounded-circle' %>
       <% end %>
     </div>
-    <div class='col-md-9'><%= article.body.truncate(100, omission: '...') %></div>
+    <div class='col-md-10'><%= article.body.truncate(100, omission: '...') %></div>
   </div>
   <div>
-    Category：<%= link_to articles_path(category_name: article.category.name), class:'badge border border-success text-success mr-3', style:"font-size: 100%;" do %>
+    Category：<%= link_to articles_path(category_name: article.category.name), class:'badge border border-success text-success mr-3 mb-2', style:"font-size: 100%;" do %>
       <%= article.category.name %>
     <% end %>
     Tag：<% article.tags.each do |tag| %>

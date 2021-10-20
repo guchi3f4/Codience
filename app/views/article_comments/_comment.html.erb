@@ -4,7 +4,9 @@
       <%= attachment_image_tag article_comment.user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg", class:'rounded-circle mr-3' %>
     <% end %>
     <div>
-      <span class="align-bottom font-weight-bold"><%= article_comment.user.name %></span><br>
+      <%= link_to user_path(article_comment.user), class:'text-dark font-weight-bold' do %>
+        <%= article_comment.user.name %>
+      <% end %><br>
       <%= article_comment.comment%>
   　</div>
   　<div class='ml-auto'>

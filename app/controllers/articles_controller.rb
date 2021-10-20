@@ -99,19 +99,22 @@ class ArticlesController < ApplicationController
     @category_names = Category.pluck(:name)
     ApplicationRecord.transaction do
       @category = Category.find_or_create_by(name: params[:category_name])
-      sent_tags = params[:tag_names].split(',')
+      @sent_tags = params[:tag_names].split(',')
       @article = Article.new(params_article)
       @article.save!
-      @article.save_tag(sent_tags)
+
+      raise ActiveRecord::RecordInvalid if @sent_tags.empty?
+      @article.save_tag(@sent_tags)
 
       @category_tags = @article.tags.map do |tag|
         category_tag = @category.category_tags.find_or_create_by(tag_id: tag.id)
         category_tag.update(registration_count: category_tag.registration_count += 1)
       end
+      redirect_to article_path(@article)
     end
-    redirect_to article_path(@article)
 
   rescue ActiveRecord::RecordInvalid
+    @article.errors.add(:tag_names, 'Tagを入力してください') if @sent_tags.empty?
     @article_category_name = params[:category_name]
     @json_tag_names = params[:tag_names].split(',')
     render :new
@@ -134,10 +137,11 @@ class ArticlesController < ApplicationController
       end
 
       @category = Category.find_or_create_by(name: params[:category_name])
-      sent_tags = params[:tag_names].split(',')
+      @sent_tags = params[:tag_names].split(',')
       @article.update!(params_article)
 
-      @article.save_tag(sent_tags)
+      raise ActiveRecord::RecordInvalid if @sent_tags.empty?
+      @article.save_tag(@sent_tags)
       @article.tags.map do |tag|
         category_tag = @category.category_tags.find_or_create_by(tag_id: tag.id)
         category_tag.update(registration_count: category_tag.registration_count += 1)
@@ -148,6 +152,7 @@ class ArticlesController < ApplicationController
     end
     redirect_to article_path(@article)
   rescue ActiveRecord::RecordInvalid
+    @article.errors.add(:tag_names, 'Tagを入力してください') if @sent_tags.empty?
     @article_category_name = params[:category_name]
     @json_tag_names = params[:tag_names].split(',')
     render :edit

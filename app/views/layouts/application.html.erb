@@ -7,8 +7,8 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <script src="https://kit.fontawesome.com/f8d37013c4.js" crossorigin="anonymous"></script>
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
     <link href="https://unpkg.com/pattern.css" rel="stylesheet">
 
     <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
@@ -21,7 +21,7 @@
     <header>
       <nav class="navbar navbar-expand-lg navbar-dark" style='background-color: rgba(13,65,134,1);'>
         <div class="container">
-          <a class="navbar-brand" href="/" data-turbolinks="false">
+          <a class="navbar-brand" href="/">
             <img class="header-logo" src=<%= asset_path('codience.png') %> width="165" height="80">
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,12 +31,12 @@
             <ul class="navbar-nav ml-auto">
             <% if user_signed_in? %>
               <li><%= link_to " Users", users_path, class:"fas fa-users nav-link text-light" %></li>
-              <li><%= link_to " Mypage", user_path(current_user), class:"fas fa-user nav-link text-light", "data-turbolinks": false %></li>
-              <li><%= link_to " Articles", articles_path, class:"fas fa-book-open nav-link text-light", "data-turbolinks": false %></li>
+              <li><%= link_to " Mypage", user_path(current_user), class:"fas fa-user nav-link text-light" %></li>
+              <li><%= link_to " Articles", articles_path, class:"fas fa-book-open nav-link text-light" %></li>
               <li><%= link_to " logout", destroy_user_session_path, method: :delete, class:"fas fa-sign-out-alt nav-link text-light"%></li>
             <% else %>
               <li><%= link_to " Users", users_path, class:"fas fa-users nav-link text-light" %></li>
-              <li><%= link_to " Articles", articles_path, class:"fas fa-book-open nav-link text-light", "data-turbolinks": false %></li>
+              <li><%= link_to " Articles", articles_path, class:"fas fa-book-open nav-link text-light" %></li>
               <li><%= link_to " sign up", new_user_registration_path, class:"fas fa-user-plus nav-link text-light" %></li>
               <li><%= link_to " login", new_user_session_path, class:"fas fa-sign-in-alt nav-link text-light" %></li>
             <% end %>
