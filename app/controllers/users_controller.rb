@@ -221,7 +221,7 @@ class UsersController < ApplicationController
     case params[:sort_flag]
     when '新着順', nil then
       params[:sort_flag] = '新着順' if params[:sort_flag] == nil
-      @articles= @articles.page(params[:page]).per(6).order(id: 'DESC')
+      @articles = @articles.page(params[:page]).per(6).order(id: 'DESC')
     when 'いいね順' then
       @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }
       @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
