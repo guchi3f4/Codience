@@ -1,3 +1,4 @@
+<!--該当ユーザーが投稿した記事の一覧ページ-->
 <div class='pattern-cross-dots-lg'>
   <div style='background: rgba(235,235,235,0.70);'>
     <div class='container-lg py-5 px-3 px-md-4 bg-white border shadow'>
@@ -31,11 +32,8 @@
         </div>
         <!-- メインコンテンツ -->
         <div class='col-md-7 col-lg-8'>
-          <% if params[:category_name].blank? %>
-            <div id='json_category_name' data-json='<%= '未選択'.to_json %>'></div>
-          <% else %>
-            <div id='json_category_name' data-json='<%= params[:category_name].to_json %>'></div>
-          <% end %>
+          <!--検索フォームの初期値（クリックしたタグのnameを代入）-->
+          <div id='json_category_name' data-json='<%= params[:category_name].to_json %>'></div>
           <% if @tag_names.blank? %>
             <div id='json_tag_names' data-json='<%= [].to_json %>'></div>
           <% else %>

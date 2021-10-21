@@ -1,4 +1,4 @@
-<link rel="preload" href="<%= asset_path('top_head.png') %>" as="image">
+<link rel="preload" href="<%= asset_path('top_head.png') %>" as="image"> <!--画像優先読み込み-->
 
 <div class='top-head-bg text-body text-center d-flex align-items-center justify-content-center'>
   <div class='d-inline-block p-3' style='background-color: rgba(255,255,255,0.75);'>
@@ -30,6 +30,7 @@
       <p class='px-5 font-weight-bold'>あなたの学びがみんなの助けになります。</p>
     </div>
   </div>
+  <!--タグクラウドの表示-->
   <div class= 'col-lg-7 px-0 mx-auto pt-4' >
     <%= form_with url: root_path, method: :get do |f| %>
       <div id="top-tags">

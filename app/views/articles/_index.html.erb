@@ -1,5 +1,4 @@
-<%= hidden_field_tag :sort_flag, params[:sort_flag], id:'hidden-form', form:'form'%>
-
+<!--ソート機能 submit_tagをリンクとして代用-->
 <div class='mb-1'>
   <% if defined?(@tag_names) && @tag_names.count >= 2 %>
     <%= submit_tag '関連度順', form:'form', class:"relevance-submit btn btn-link font-italic #{ 'text-dark' if params[:sort_flag] == '関連度順' }" %>
@@ -9,6 +8,7 @@
   <%= submit_tag 'ブックマーク順', form:'form', class:"bookmark-submit btn btn-link font-italic #{ 'text-dark' if params[:sort_flag] == 'ブックマーク順' }" %>
 </div>
 
+<%= hidden_field_tag :sort_flag, params[:sort_flag], id:'hidden-form', form:'form'%> <!--検索フォームの部品 現在のソート内容保持のため-->
 <script>
   $(".relevance-submit").on("click", function(e){
     document.getElementById('hidden-form').value = '関連度順';
@@ -23,7 +23,7 @@
     document.getElementById('hidden-form').value = 'ブックマーク順';
   });
 </script>
-
+<!--記事一覧-->
 <% articles.each do |article| %>
   <%= render 'articles/show', article: article %>
 <% end %>
