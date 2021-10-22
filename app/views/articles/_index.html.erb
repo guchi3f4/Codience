@@ -8,6 +8,21 @@
   <%= submit_tag 'ブックマーク順', form:'form', class:"bookmark-submit btn btn-link font-italic #{ 'text-dark' if params[:sort_flag] == 'ブックマーク順' }" %>
 </div>
 
+<% if defined?(@tag_names) && @tag_names.count >= 2 %>
+  <div class='font-weight-bold mb-2 mx-3' id='select-number' style='color: #45494D'>
+    <span>タグが</span>
+    <%= select_tag :duplicate_num, options_for_select( (2..(@tag_names.count)).map { |num| [num.to_s + '個', num] } << '全て', params[:duplicate_num]),
+    form:'form', class:'duplicate-num rounded font-weight-bold font-italic',
+    style:'border: 2px solid; padding: 1px 0; color: rgba(0,123,255,0.8);', onchange:'selNum()'%>
+    <span><%= '以上' unless params[:duplicate_num] == '全て' %>一致する記事を表示</span>
+  </div>
+<% end %>
+<script>
+  function selNum() {
+    document.getElementById("search-btn").click();
+  };
+</script>
+
 <%= hidden_field_tag :sort_flag, params[:sort_flag], id:'hidden-form', form:'form'%> <!--検索フォームの部品 現在のソート内容保持のため-->
 <script>
   $(".relevance-submit").on("click", function(e){

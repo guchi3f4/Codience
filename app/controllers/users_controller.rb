@@ -68,7 +68,6 @@ class UsersController < ApplicationController
           @category = Category.find_by(name: params[:category_name])
           @articles = @tag.articles.where(user_id: @user.id, category_id: @category.id)
         end
-        duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
       # 検索タグが2つ以上の場合
       else
         @tags = Tag.where(name: @tag_names)
@@ -82,11 +81,15 @@ class UsersController < ApplicationController
         @article_ids = @article_tags.pluck(:article_id)
         itself_article_ids  = @article_ids.group_by(&:itself)
         hash_article_ids = itself_article_ids.map{ |key, value| [key, value.count] }.to_h
-        select_article_ids = hash_article_ids.select {|key, value| value >= 2 }
+        # 入力した値によって、検索したタグがいくつ一致するかが変動
+        if params[:duplicate_num].blank? || params[:duplicate_num] == '全て' ||  params[:duplicate_num].to_i > @tag_names.count
+          @duplicate_num = @tag_names.count
+          params[:duplicate_num] = @tag_names.count if params[:duplicate_num].to_i > @tag_names.count
+        else
+          @duplicate_num = params[:duplicate_num].to_i
+        end
+        select_article_ids = hash_article_ids.select {|key, value| value >= @duplicate_num }
         @articles = Article.where(id: select_article_ids.keys)
-
-        results_articles = Article.where(id: hash_article_ids.keys)
-        duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
       end
     # 検索タグが入力されていな場合
     else
@@ -97,9 +100,15 @@ class UsersController < ApplicationController
         @category = Category.find_by(name: params[:category_name])
         @articles = @user.articles.where(category_id: @category.id)
       end
+    end
+
+    # タグクラウドの表示
+    if defined?(@tag_names) && @tag_names.count >= 2
+      results_articles = Article.where(id: hash_article_ids.keys)
+      duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
+    else
       duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
     end
-    # タグクラウドの表示
     itself_tag_names  = duplicate_tag_names.group_by(&:itself)
     hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
     sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
@@ -120,6 +129,7 @@ class UsersController < ApplicationController
         { tag: key, count: value, show_count: tag_count }
       end
     end
+
     # ソート機能
     case params[:sort_flag]
     when '新着順', nil then
@@ -165,7 +175,6 @@ class UsersController < ApplicationController
           @category = Category.find_by(name: params[:category_name])
           @articles = @tag.articles.where(id: @article_bookmarks_ids, category_id: @category.id)
         end
-        duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
       # 検索にタグが2つ以上の場合
       else
         @tags = Tag.where(name: @tag_names)
@@ -179,11 +188,15 @@ class UsersController < ApplicationController
         @article_ids = @article_tags.pluck(:article_id)
         itself_article_ids  = @article_ids.group_by(&:itself)
         hash_article_ids = itself_article_ids.map{ |key, value| [key, value.count] }.to_h
-        select_article_ids = hash_article_ids.select {|key, value| value >= 2 }
+        # 入力した値によって、検索したタグがいくつ一致するかが変動
+        if params[:duplicate_num].blank? || params[:duplicate_num] == '全て' ||  params[:duplicate_num].to_i > @tag_names.count
+          @duplicate_num = @tag_names.count
+          params[:duplicate_num] = @tag_names.count if params[:duplicate_num].to_i > @tag_names.count
+        else
+          @duplicate_num = params[:duplicate_num].to_i
+        end
+        select_article_ids = hash_article_ids.select {|key, value| value >= @duplicate_num }
         @articles = Article.where(id: select_article_ids.keys)
-
-        results_articles = Article.where(id: hash_article_ids.keys)
-        duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
       end
     # 検索にタグが入力されていな場合
     else
@@ -194,9 +207,15 @@ class UsersController < ApplicationController
         @category = Category.find_by(name: params[:category_name])
         @articles = Article.where(id: @article_bookmarks_ids, category_id: @category.id)
       end
+    end
+
+    # タグクラウドの表示
+    if defined?(@tag_names) && @tag_names.count >= 2
+      results_articles = Article.where(id: hash_article_ids.keys)
+      duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
+    else
       duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
     end
-    # タグクラウドの表示
     itself_tag_names  = duplicate_tag_names.group_by(&:itself)
     hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
     sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
@@ -217,6 +236,7 @@ class UsersController < ApplicationController
         { tag: key, count: value, show_count: tag_count }
       end
     end
+
     # ソート機能
     case params[:sort_flag]
     when '新着順', nil then

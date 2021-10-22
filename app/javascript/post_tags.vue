@@ -7,8 +7,8 @@
         <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
           {{tag}}<span class="pl-1" type="button" v-on:click="delTag(tag)">×</span>
         </div>
-        <input id="field" class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"
-        @input='onInput' autocomplete="off">
+        <input id="field" class="border-0" style="outline: 0" type="text" placeholder="複数追加できます(Enterで確定)" v-model="newTag" v-on:keydown.enter="setTag"
+        @input='onInput' autocomplete="off" size='26'>
       </div>
     </div>
     <!--補完部分の表示-->
