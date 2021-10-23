@@ -39,16 +39,16 @@ class ArticlesController < ApplicationController
           @article_tags = ArticleTag.where(tag_id: @tags, article_id: @category.articles)
         end
         @article_ids = @article_tags.pluck(:article_id)
-        itself_article_ids  = @article_ids.group_by(&:itself)
-        hash_article_ids = itself_article_ids.map{ |key, value| [key, value.count] }.to_h
+        itself_article_ids = @article_ids.group_by(&:itself)
+        hash_article_ids = itself_article_ids.map { |key, value| [key, value.count] }.to_h
         # 入力した値によって、検索したタグがいくつ一致するかが変動
-        if params[:duplicate_num].blank? || params[:duplicate_num] == '全て' ||  params[:duplicate_num].to_i > @tag_names.count
+        if params[:duplicate_num].blank? || params[:duplicate_num] == '全て'
           @duplicate_num = @tag_names.count
-          params[:duplicate_num] = @tag_names.count if params[:duplicate_num].to_i > @tag_names.count
         else
+          params[:duplicate_num] = @tag_names.count if params[:duplicate_num].to_i > @tag_names.count
           @duplicate_num = params[:duplicate_num].to_i
         end
-        select_article_ids = hash_article_ids.select {|key, value| value >= @duplicate_num }
+        select_article_ids = hash_article_ids.select { |key, value| value >= @duplicate_num }
         @articles = Article.where(id: select_article_ids.keys)
       end
     # 検索にタグが入力されていな場合
@@ -65,9 +65,9 @@ class ArticlesController < ApplicationController
     if params[:content].present?
       if @tag_names.count == 1
         duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
-        itself_tag_names  = duplicate_tag_names.group_by(&:itself)
-        hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
-        sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+        itself_tag_names = duplicate_tag_names.group_by(&:itself)
+        hash_tag_names = itself_tag_names.map { |key, value| [key, value.count] }.to_h
+        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
         @results = sort_tag_names.map do |key, value|
           tag = Tag.find_by(name: key)
           if params[:category_name] == '未選択'
@@ -75,14 +75,14 @@ class ArticlesController < ApplicationController
           else
             tag_count = tag.articles.where(category_id: @category.id).count
           end
-          { tag: key, count: value, show_count: tag_count}
+          { tag: key, count: value, show_count: tag_count }
         end
       else
         results_articles = Article.where(id: hash_article_ids.keys)
         duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
-        itself_tag_names  = duplicate_tag_names.group_by(&:itself)
-        hash_tag_names = itself_tag_names.map{ |key, value| [key, value.count] }.to_h
-        sort_tag_names = hash_tag_names.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+        itself_tag_names = duplicate_tag_names.group_by(&:itself)
+        hash_tag_names = itself_tag_names.map { |key, value| [key, value.count] }.to_h
+        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
         @results = sort_tag_names.map do |key, value|
           tag = Tag.find_by(name: key)
           tag_count = tag.articles.where(id: @article_ids).count
@@ -91,32 +91,38 @@ class ArticlesController < ApplicationController
       end
     else
       if params[:category_name] == '未選択'
-        @results = Tag.all.map { |tag| { tag: tag.name, count: tag.articles.count, show_count: tag.articles.count } }
+        @results = Tag.all.map do |tag|
+          { tag: tag.name, count: tag.articles.count, show_count: tag.articles.count }
+        end
       else
-        @results = @category.category_tags.map { |category_tag|
-          { tag: category_tag.tag.name, count: category_tag.registration_count, show_count: category_tag.registration_count }
-        }
+        @results = @category.category_tags.map do |category_tag|
+          {
+            tag:        category_tag.tag.name,
+            count:      category_tag.registration_count,
+            show_count: category_tag.registration_count,
+          }
+        end
       end
     end
 
     # ソート機能
     case params[:sort_flag]
     when '新着順', nil then
-      params[:sort_flag] = '新着順' if params[:sort_flag] == nil
+      params[:sort_flag] = '新着順' if params[:sort_flag].nil?
       @articles = @articles.page(params[:page]).per(6).order(id: 'DESC')
     when 'いいね順' then
-      @articles = @articles.sort{ |a,b| b.article_favorites.count <=> a.article_favorites.count }
+      @articles = @articles.sort { |a, b| b.article_favorites.count <=> a.article_favorites.count }
       @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
     when 'ブックマーク順' then
-      @articles = @articles.sort{ |a,b| b.article_bookmarks.size <=> a.article_bookmarks.size }
+      @articles = @articles.sort { |a, b| b.article_bookmarks.size <=> a.article_bookmarks.size }
       @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
     when '関連度順' then
-      if ( defined?(@tag_names) && @tag_names.count == 1 )
+      if defined?(@tag_names) && @tag_names.count == 1
         params[:sort_flag] = '新着順'
-        @articles= @articles.page(params[:page]).per(6).order(id: 'DESC')
+        @articles = @articles.page(params[:page]).per(6).order(id: 'DESC')
       else
-        sort_article_ids = select_article_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
-        @articles = Article.where(id: sort_article_ids.keys).sort_by{ |a| sort_article_ids.keys.index(a.id)}
+        sort_article_ids = select_article_ids.sort { |(_, v1), (_, v2)| v2 <=> v1 }.to_h
+        @articles = Article.where(id: sort_article_ids.keys).sort_by { |a| sort_article_ids.keys.index(a.id) }
         @articles = Kaminari.paginate_array(@articles).page(params[:page]).per(6)
       end
     end

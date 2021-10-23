@@ -20,12 +20,12 @@ class Article < ApplicationRecord
   end
 
   def save_tag(sent_tags)
-    if self.tags.present?
-      self.tags.destroy_all
+    if tags.present?
+      tags.destroy_all
     end
     sent_tags.map do |tag|
       article_tag = Tag.find_or_create_by(name: tag)
-      self.tags << article_tag
+      tags << article_tag
     end
   end
 end

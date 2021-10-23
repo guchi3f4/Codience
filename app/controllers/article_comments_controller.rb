@@ -20,5 +20,4 @@ class ArticleCommentsController < ApplicationController
   def article_comment_params
     params.require(:article_comment).permit(:comment).merge(user_id: current_user.id)
   end
-
 end

@@ -14,10 +14,10 @@ class User < ApplicationRecord
   has_many :followers, through: :passive_relations, source: :follower
   attachment :profile_image
 
-  validates:name,
+  validates :name,
     uniqueness: true,
-    length: { in: 2..20 }
-  validates:introduction,
+    length:     { in: 2..20 }
+  validates :introduction,
     length: { maximum: 100 }
 
   def be_favorites_count
