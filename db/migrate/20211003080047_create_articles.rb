@@ -5,6 +5,7 @@ class CreateArticles < ActiveRecord::Migration[5.2]
       t.integer :category_id
       t.string :title
       t.string :link
+      t.text :summary
       t.text :body
       t.integer :view_count, default: 0
 

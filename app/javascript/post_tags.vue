@@ -4,7 +4,7 @@
       <label for='field' class='font-weight-bold'>Tag</label>
       <input type="hidden" id="tag-names" class="form-control" v-model="tags" name="tag_names">
       <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1" @click='inputField'>
-        <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
+        <div class="badge badge-primary badge-pill mr-1 mb-1" style="font-size: 100%;" v-for="tag in tags">
           {{tag}}<span class="pl-1" type="button" v-on:click="delTag(tag)">×</span>
         </div>
         <input id="field" class="border-0" style="outline: 0" type="text" placeholder="複数追加できます(Enterで確定)" v-model="newTag" v-on:keydown.enter="setTag"

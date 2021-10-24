@@ -8,7 +8,7 @@ class Article < ApplicationRecord
   has_many :tags, through: :article_tags
 
   validates :title, presence: true
-  validates :body,  presence: true
+  validates :summary, presence: true
   validates :link,  presence: true
 
   def favorited_by?(user)
@@ -23,8 +23,19 @@ class Article < ApplicationRecord
     if tags.present?
       tags.destroy_all
     end
+
     sent_tags.map do |tag|
-      article_tag = Tag.find_or_create_by(name: tag)
+      # ひらがなに変換（補完機能用) gem: miyabi
+      if tag.match(/[a-z0-9]/)
+        conversion_name = tag
+      else
+        if tag.match(/[一-龠々]/)
+          conversion_name = tag.to_kanhira.to_hira
+        else
+          conversion_name = tag.to_hira
+        end
+      end
+      article_tag = Tag.find_or_create_by(name: tag, conversion_name: conversion_name)
       tags << article_tag
     end
   end

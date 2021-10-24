@@ -9,7 +9,7 @@ class ArticlesController < ApplicationController
     @user = @article.user
     # タグクラウドの表示
     @results = Tag.all.map do |tag|
-      { tag: tag.name, count: tag.articles.count }
+      { tag: tag.name, count: tag.articles.count, show_count: tag.articles.count}
     end
   end
 
@@ -213,7 +213,7 @@ class ArticlesController < ApplicationController
   private
 
   def params_article
-    params.require(:article).permit(:title, :body, :link).merge(user_id: current_user.id, category_id: @category.id)
+    params.require(:article).permit(:title, :summary, :body, :link).merge(user_id: current_user.id, category_id: @category.id)
   end
 
   def ensure_correct_user

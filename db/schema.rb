@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 2021_10_03_092900) do
     t.integer "category_id"
     t.string "title"
     t.string "link"
+    t.text "summary"
     t.text "body"
     t.integer "view_count", default: 0
     t.datetime "created_at", null: false
@@ -68,6 +69,7 @@ ActiveRecord::Schema.define(version: 2021_10_03_092900) do
 
   create_table "tags", force: :cascade do |t|
     t.string "name"
+    t.string "conversion_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

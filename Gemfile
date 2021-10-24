@@ -73,6 +73,7 @@ gem 'pry-byebug'
 gem 'kaminari'
 gem 'jquery-rails'
 gem 'dotenv-rails'
+gem 'miyabi'
 group :production do
   gem 'mysql2'
 end

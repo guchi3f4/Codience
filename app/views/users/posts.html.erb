@@ -6,7 +6,7 @@
         <h1 class='font-weight-bold mr-3' style='font-family: cursive;'>User Page</h1>
         <h4 class='text-line d-sm-flex font-italic'><%= @user.name%></h4>
       </div>
-      <p class='text-line d-flex font-weight-bold font-italic justify-content-center pt-1 mb-5' style='font-size: 17px; color: #45494D;'>投稿記事一覧</p>
+      <p class='text-line d-flex font-weight-bold font-italic justify-content-center pt-2 mb-5' style='font-size: 17px; color: #45494D;'>投稿記事一覧</p>
       <div class='row flex-md-row flex-column-reverse'>
         <!-- サイドバー -->
         <div class='col-md-5 col-lg-4'>
@@ -25,7 +25,10 @@
             <% if user_signed_in? %>
               <!--新規投稿フォーム-->
               <div class='new-article-form'>
-                <h3 class="my-3">New Article</h3>
+                <div class='row align-items-center'>
+                  <h3 class="my-3">New Article</h3>
+                  <%= link_to '投稿フォーム拡大', new_article_path, class:'ml-auto mx-md-auto font-weight-bold pt-2' %>
+                </div>
                 <%= render 'articles/article_form', article: @article %>
               </div>
             <% end %>

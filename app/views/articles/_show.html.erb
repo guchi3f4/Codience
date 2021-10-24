@@ -18,12 +18,18 @@
     </div>
   </div>
   <div class='row mb-2 py-2'>
-    <div class='col-md-2'>
+    <div class='px-3 pb-1 px-md-2'>
       <%= link_to user_path(article.user) do %>
-        <%= attachment_image_tag article.user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg", class:'rounded-circle' %>
+        <%= attachment_image_tag article.user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg", class:'rounded-circle mt-1' %>
       <% end %>
     </div>
-    <div class='col-md-10'><%= article.body.truncate(100, omission: '...') %></div>
+    <div class='col-md-10 px-3 px-lg-0 mx-auto'>
+      <% if current_page?(articles_path) %>
+        <%= article.summary.truncate(150, omission: '...') %>
+      <% else %>
+        <%= article.summary %>
+      <% end %>
+    </div>
   </div>
   <div>
     Category：<%= link_to articles_path(category_name: article.category.name), class:'badge border border-success text-success mr-3 mb-2', style:"font-size: 100%;" do %>
@@ -36,3 +42,8 @@
     <% end %>
   </div>
 </div>
+<% if current_page?(article_path(article)) %>
+  <div class='py-3 mt-4 px-2' style='border: dashed lightgray; border-width: 2px 0;'>
+    <%= article.body %>
+  </div>
+<% end %>

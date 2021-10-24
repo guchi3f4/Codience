@@ -20,7 +20,10 @@
               </div>
               <!--新規投稿フォーム-->
               <div class='new-article-form'>
-                <h3 class="my-3">New Article</h3>
+                <div class='row align-items-center'>
+                  <h3 class="my-3">New Article</h3>
+                  <%= link_to '投稿フォーム拡大', new_article_path, class:'ml-auto mx-md-auto font-weight-bold pt-2' %>
+                </div>
                   <%= render 'articles/article_form', article: @article %>
               </div>
             <% else %>
