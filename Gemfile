@@ -74,6 +74,7 @@ gem 'kaminari'
 gem 'jquery-rails'
 gem 'dotenv-rails'
 gem 'miyabi'
+gem 'redcarpet'
 group :production do
   gem 'mysql2'
 end

@@ -30,10 +30,11 @@
 
   <% if current_page?(new_article_path) || request.url.include?('/edit') %>
     <div class="form-group">
-      <%= f.label :body, 'Body', class:'font-weight-bold' %>
+      <%= f.label :body, 'Body', class:'article_form_arrow font-weight-bold' %>
       <span class="article_form_arrow text-success px-1 fas fa-chevron-down"></span>
       <span class='text-danger mx-4'>※必須入力ではありません</span>
-      <%= f.text_area :body, class:"form-control", id:'article_form_body', style:'display: none;', rows:'20', placeholder:'補足や補完などを記述'%>
+      <%= f.text_area :body, class:"form-control", id:'article_form_body', style:'display: none;',
+        rows:'20', placeholder:'補足や補完などを記述&#13;&#10;&#13;&#10;※Markdown記法も使えます。'.html_safe %>
     </div>
     <script>
       $(function() {
@@ -45,10 +46,10 @@
   <% end %>
 
   <div class="form-group mt-4">
-    <% if current_page?(action: 'index') %>
-      <button class='btn btn-success' type="button" onclick="submit(); ">Create Article</button>
-    <% else %>
+    <% if request.url.include?('/edit') %>
       <button class='btn btn-success' type="button" onclick="submit(); ">Update Article</button>
+    <% else %>
+      <button class='btn btn-success' type="button" onclick="submit(); ">Create Article</button>
     <% end %>
   </div>
 <% end %>

@@ -5,14 +5,22 @@
         <!-- サイドバー -->
         <div class='col-md-5 col-lg-4'>
           <div class='col-md-12 px-0 d-flex flex-column-reverse flex-md-column'>
-            <!--amcharts タグ表示-->
-            <div class='results pb-2'>
-              <%= render 'layouts/amcharts', results: @results %>
-            </div>
             <!-- ユーザ情報 -->
             <div>
               <%= render 'users/user_info_head', user: @user %>
               <%= render 'users/user_info', user: @user %>
+            </div>
+            <!--amcharts タグ表示-->
+            <div class='results pb-2'>
+              <%= render 'layouts/amcharts', results: @results %>
+            </div>
+            <!--新規投稿フォーム-->
+            <div class='new-article-form'>
+              <div class='row align-items-center'>
+                <h3 class="my-3">New Article</h3>
+                <%= link_to '投稿フォーム拡大', new_article_path, class:'ml-auto mx-md-auto font-weight-bold pt-2' %>
+              </div>
+                <%= render 'articles/article_form', article: Article.new %>
             </div>
           </div>
         </div>
