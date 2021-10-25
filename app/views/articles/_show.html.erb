@@ -42,7 +42,7 @@
     <% end %>
   </div>
 </div>
-<% if current_page?(article_path(article)) %>
+<% if current_page?(article_path(article)) && article.body.present? %>
   <div class='py-3 mt-4 px-2 text-break' style='border: dashed lightgray; border-width: 2px 0;'>
     <%= markdown(article.body) %>
   </div>
