@@ -25,10 +25,13 @@
 
   <div class="form-group">
     <%= f.label :summary, 'Summary', class:'font-weight-bold' %>
+    <% if current_page?(new_article_path) || request.url.include?('/edit') || article.errors.present? %>
+      <span class='text-danger mx-4'>※必須入力ではありません</span>
+    <% end %>
     <%= f.text_area :summary, class:"form-control", rows:'8', placeholder:'概要や感想などを記述'%>
   </div>
 
-  <% if current_page?(new_article_path) || request.url.include?('/edit') %>
+  <% if current_page?(new_article_path) || request.url.include?('/edit') || article.errors.present? %>
     <div class="form-group">
       <%= f.label :body, 'Body', class:'article_form_arrow font-weight-bold' %>
       <span class="article_form_arrow text-success px-1 fas fa-chevron-down"></span>

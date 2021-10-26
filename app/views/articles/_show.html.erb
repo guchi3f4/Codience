@@ -6,7 +6,7 @@
   <div class='row border-bottom pb-2'>
     <div class='col-8 col-sm-9 text-truncate'>
       <i class="fas fa-link"></i>
-      <%= link_to article.link do %>
+      <%= link_to article.link, target:'_blank', rel:"noopener noreferrer" do %>
         <%= article.link %>
       <% end %>
     </div>
