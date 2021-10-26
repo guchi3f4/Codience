@@ -8,7 +8,6 @@ class Article < ApplicationRecord
   has_many :tags, through: :article_tags
 
   validates :title, presence: true
-  validates :summary, presence: true
   validates :link,  presence: true
 
   def favorited_by?(user)

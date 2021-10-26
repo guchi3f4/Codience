@@ -17,21 +17,29 @@
       <%= render 'article_bookmarks/bookmark', article: article %>
     </div>
   </div>
-  <div class='row mb-2 py-2'>
-    <div class='px-3 pb-1 px-md-2'>
+  <% if article.summary.present? %>
+    <div class='row mb-2 py-2'>
+      <div class='px-3 pb-1 pr-md-0 pl-md-3'>
+        <%= link_to user_path(article.user) do %>
+          <%= attachment_image_tag article.user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg", class:'rounded-circle mt-1' %>
+        <% end %>
+      </div>
+      <div class='col-md-10 px-3 px-lg-0 mx-auto'>
+        <% if current_page?(articles_path) %>
+          <%= article.summary.truncate(150, omission: '...') %>
+        <% else %>
+          <%= article.summary %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class='pt-2 pr-4 d-inline-block'>
       <%= link_to user_path(article.user) do %>
-        <%= attachment_image_tag article.user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg", class:'rounded-circle mt-1' %>
+        <%= attachment_image_tag article.user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg", class:'rounded-circle my-1' %>
       <% end %>
     </div>
-    <div class='col-md-10 px-3 px-lg-0 mx-auto'>
-      <% if current_page?(articles_path) %>
-        <%= article.summary.truncate(150, omission: '...') %>
-      <% else %>
-        <%= article.summary %>
-      <% end %>
-    </div>
-  </div>
-  <div>
+  <% end %>
+  <div class='d-inline-block'>
     Category：<%= link_to articles_path(category_name: article.category.name), class:'badge border border-success text-success mr-3 mb-2', style:"font-size: 100%;" do %>
       <%= article.category.name %>
     <% end %>
