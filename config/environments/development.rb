@@ -61,4 +61,15 @@ Rails.application.configure do
 
   host = 'e31411fb26694d3d83a5832bd4c83e25.vfs.cloud9.ap-northeast-1.amazonaws.com/'
   config.action_mailer.default_url_options = { host: host, protocol: 'http' }
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+        address:              'smtp.gmail.com',
+        port:                 587,
+        domain:               'smtp.gmail.com',
+        user_name:            ENV['WELCOME_MAILER_ADDRESS'],
+        password:             ENV['WELCOME_MAILER_PASSWORD'],
+        authentication:       'plain',
+        enable_starttls_auto: true
+  }
 end
