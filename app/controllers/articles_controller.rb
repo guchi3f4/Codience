@@ -67,7 +67,8 @@ class ArticlesController < ApplicationController
         duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
         itself_tag_names = duplicate_tag_names.group_by(&:itself)
         hash_tag_names = itself_tag_names.map { |key, value| [key, value.count] }.to_h
-        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.last(20)
+        sort_count = sort_tag_names.to_h.values.uniq
         @results = sort_tag_names.map do |key, value|
           tag = Tag.find_by(name: key)
           if params[:category_name] == '未選択'
@@ -75,30 +76,37 @@ class ArticlesController < ApplicationController
           else
             tag_count = tag.articles.where(category_id: @category.id).count
           end
-          { tag: key, count: value, show_count: tag_count }
+          { tag: key, count: sort_count.index(value), show_count: tag_count }
         end
       else
         results_articles = Article.where(id: hash_article_ids.keys)
         duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
         itself_tag_names = duplicate_tag_names.group_by(&:itself)
         hash_tag_names = itself_tag_names.map { |key, value| [key, value.count] }.to_h
-        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.last(20)
+        sort_count = sort_tag_names.to_h.values.uniq
         @results = sort_tag_names.map do |key, value|
           tag = Tag.find_by(name: key)
           tag_count = tag.articles.where(id: @article_ids).count
-          { tag: key, count: value, show_count: tag_count }
+          { tag: key, count: sort_count.index(value), show_count: tag_count }
         end
       end
     else
       if params[:category_name] == '未選択'
+        sort_count = Tag.all.map { |tag| tag.articles.count }.uniq.sort
         @results = Tag.all.map do |tag|
-          { tag: tag.name, count: tag.articles.count, show_count: tag.articles.count }
+          {
+            tag:        tag.name,
+            count:      sort_count.index(tag.articles.count),
+            show_count: tag.articles.count,
+          }
         end
       else
+        sort_count = @category.category_tags.pluck(:registration_count).uniq.sort
         @results = @category.category_tags.map do |category_tag|
           {
             tag:        category_tag.tag.name,
-            count:      category_tag.registration_count,
+            count:      sort_count.index(category_tag.registration_count),
             show_count: category_tag.registration_count,
           }
         end

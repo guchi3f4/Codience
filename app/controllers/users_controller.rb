@@ -54,6 +54,7 @@ class UsersController < ApplicationController
 
   def posts
     @user = User.find(params[:id])
+    @article = Article.new
     params[:category_name] = '未選択' if params[:category_name].blank?
     @category_names = Category.pluck(:name)
     # 検索タグが入力されているか
@@ -94,7 +95,6 @@ class UsersController < ApplicationController
     # 検索タグが入力されていな場合
     else
       if params[:category_name] == '未選択'
-        @article = Article.new
         @articles = @user.articles.all
       else
         @category = Category.find_by(name: params[:category_name])
@@ -111,12 +111,13 @@ class UsersController < ApplicationController
     end
     itself_tag_names = duplicate_tag_names.group_by(&:itself)
     hash_tag_names = itself_tag_names.map { |key, value| [key, value.count] }.to_h
-    sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+    sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.last(20)
+    sort_count = sort_tag_names.to_h.values.uniq
     if defined?(@tag_names) && @tag_names.count >= 2
       @results = sort_tag_names.map do |key, value|
         tag = Tag.find_by(name: key)
         tag_count = tag.articles.where(id: @article_ids).count
-        { tag: key, count: value, show_count: tag_count }
+        { tag: key, count: sort_count.index(value), show_count: tag_count }
       end
     else
       @results = sort_tag_names.map do |key, value|
@@ -126,7 +127,7 @@ class UsersController < ApplicationController
         else
           tag_count = tag.articles.where(user_id: @user, category_id: @category).count
         end
-        { tag: key, count: value, show_count: tag_count }
+        { tag: key, count: sort_count.index(value), show_count: tag_count }
       end
     end
 
@@ -160,6 +161,7 @@ class UsersController < ApplicationController
 
   def bookmarks
     @user = User.find(params[:id])
+    @article = Article.new
     params[:category_name] = '未選択' if params[:category_name].blank?
     @article_bookmarks_ids = @user.article_bookmarks.pluck(:article_id)
     @category_names = Category.pluck(:name)
@@ -201,7 +203,6 @@ class UsersController < ApplicationController
     # 検索にタグが入力されていな場合
     else
       if params[:category_name] == '未選択'
-        @article = Article.new
         @articles = Article.where(id: @article_bookmarks_ids)
       else
         @category = Category.find_by(name: params[:category_name])
@@ -218,12 +219,13 @@ class UsersController < ApplicationController
     end
     itself_tag_names = duplicate_tag_names.group_by(&:itself)
     hash_tag_names = itself_tag_names.map { |key, value| [key, value.count] }.to_h
-    sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v2 <=> v1 }.to_h.first(20)
+    sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.last(20)
+    sort_count = sort_tag_names.to_h.values.uniq
     if defined?(@tag_names) && @tag_names.count >= 2
       @results = sort_tag_names.map do |key, value|
         tag = Tag.find_by(name: key)
         tag_count = tag.articles.where(id: hash_article_ids.keys).count
-        { tag: key, count: value, show_count: tag_count }
+        { tag: key, count: sort_count.index(value), show_count: tag_count }
       end
     else
       @results = sort_tag_names.map do |key, value|
@@ -233,7 +235,7 @@ class UsersController < ApplicationController
         else
           tag_count = tag.articles.where(id: @article_bookmarks_ids, category_id: @category).count
         end
-        { tag: key, count: value, show_count: tag_count }
+        { tag: key, count: sort_count.index(value), show_count: tag_count }
       end
     end
 
