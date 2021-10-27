@@ -5,7 +5,7 @@ class HomesController < ApplicationController
     if params[:category_name] == '未選択'
       @article = Article.new
       @articles = Article.order(id: 'DESC')
-      sort_tags = Tag.all.sort { |a, b| a.articles.count <=> b.articles.count }.last(20)
+      sort_tags = Tag.all.sort { |a, b| a.articles.count <=> b.articles.count }.last(15)
       sort_count = sort_tags.map { |tag| tag.articles.count }.uniq
       @results = sort_tags.map do |tag|
         {

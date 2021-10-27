@@ -67,7 +67,7 @@ class ArticlesController < ApplicationController
         duplicate_tag_names = @articles.map { |article| article.tags.pluck(:name) }.flatten
         itself_tag_names = duplicate_tag_names.group_by(&:itself)
         hash_tag_names = itself_tag_names.map { |key, value| [key, value.count] }.to_h
-        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.last(12)
+        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.last(10)
         sort_count = sort_tag_names.to_h.values.uniq
         @results = sort_tag_names.map do |key, value|
           tag = Tag.find_by(name: key)
@@ -83,7 +83,7 @@ class ArticlesController < ApplicationController
         duplicate_tag_names = results_articles.map { |article| article.tags.pluck(:name) }.flatten
         itself_tag_names = duplicate_tag_names.group_by(&:itself)
         hash_tag_names = itself_tag_names.map { |key, value| [key, value.count] }.to_h
-        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.last(12)
+        sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.last(10)
         sort_count = sort_tag_names.to_h.values.uniq
         @results = sort_tag_names.map do |key, value|
           tag = Tag.find_by(name: key)
@@ -93,7 +93,7 @@ class ArticlesController < ApplicationController
       end
     else
       if params[:category_name] == '未選択'
-        sort_tags = Tag.all.sort { |a, b| a.articles.count <=> b.articles.count }.last(12)
+        sort_tags = Tag.all.sort { |a, b| a.articles.count <=> b.articles.count }.last(10)
         sort_count = sort_tags.map { |tag| tag.articles.count }.uniq
         @results = sort_tags.map do |tag|
           {
@@ -103,7 +103,7 @@ class ArticlesController < ApplicationController
           }
         end
       else
-        sort_category_tags = @category.category_tags.sort { |a, b| a.registration_count <=> b.registration_count }.last(12)
+        sort_category_tags = @category.category_tags.sort { |a, b| a.registration_count <=> b.registration_count }.last(10)
         sort_count = sort_category_tags.pluck(:registration_count).uniq
         @results = sort_category_tags.map do |category_tag|
           {
