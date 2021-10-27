@@ -8,8 +8,14 @@ class ArticlesController < ApplicationController
     @article_comment = ArticleComment.new
     @user = @article.user
     # タグクラウドの表示
-    @results = Tag.all.map do |tag|
-      { tag: tag.name, count: tag.articles.count, show_count: tag.articles.count}
+    sort_tags = Tag.all.sort { |a, b| a.articles.count <=> b.articles.count }.last(10)
+    sort_count = sort_tags.map { |tag| tag.articles.count }.uniq
+    @results = sort_tags.map do |tag|
+      {
+        tag:        tag.name,
+        count:      sort_count.index(tag.articles.count),
+        show_count: tag.articles.count,
+      }
     end
   end
 
