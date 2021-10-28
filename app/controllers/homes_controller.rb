@@ -17,7 +17,7 @@ class HomesController < ApplicationController
     else
       @category = Category.find_by(name: params[:category_name])
       @articles = @category.articles.order(id: 'DESC')
-      sort_category_tags = @category.category_tags.sort { |a, b| a.registration_count <=> b.registration_count }.last(20)
+      sort_category_tags = @category.category_tags.sort { |a, b| a.registration_count <=> b.registration_count }.last(15)
       sort_count = sort_category_tags.pluck(:registration_count).uniq
       @results = sort_category_tags.map do |category_tag|
         {

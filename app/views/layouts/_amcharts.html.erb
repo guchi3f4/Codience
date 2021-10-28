@@ -27,7 +27,7 @@
     const chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
     chart.fontFamily = "Courier New";
     const series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
-    series.randomness = 0.3;
+    series.randomness = 0.1;
     series.rotationThreshold = 0.8;
 
     series.data = JSON.parse(document.getElementById('tag_info').dataset.json);
@@ -39,8 +39,13 @@
       series.user = JSON.parse(document.getElementById('json-user-id').dataset.json);
     }
 
-    series.maxFontSize = am4core.percent(20);
-    series.minFontSize = am4core.percent(7);
+    if (path.includes('articles') || path.includes('posts') || path.includes('bookmarks')) {
+      series.maxFontSize = am4core.percent(20);
+      series.minFontSize = am4core.percent(7);
+    } else {
+      series.maxFontSize = am4core.percent(22);
+      series.minFontSize = am4core.percent(7);
+    }
 
     series.heatRules.push({
       "target": series.labels.template,
