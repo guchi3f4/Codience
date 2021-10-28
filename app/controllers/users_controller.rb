@@ -26,7 +26,7 @@ class UsersController < ApplicationController
       duplicate_tag_names = @user_articles.map { |article| article.tags.pluck(:name) }.flatten
       itself_tag_names = duplicate_tag_names.group_by(&:itself)
       hash_tag_names = itself_tag_names.map { |key, value| [key, value.count] }.to_h
-      sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.to_h.last(15)
+      sort_tag_names = hash_tag_names.sort { |(_, v1), (_, v2)| v1 <=> v2 }.last(15)
       sort_count = sort_tag_names.to_h.values.uniq
       @results = sort_tag_names.map { |key, value| { tag: key, count: sort_count.index(value), show_count: value } }
     end
