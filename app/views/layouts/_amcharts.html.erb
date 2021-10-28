@@ -39,13 +39,8 @@
       series.user = JSON.parse(document.getElementById('json-user-id').dataset.json);
     }
 
-    if (path.includes('articles') || path.includes('posts') || path.includes('bookmarks')) {
-      series.maxFontSize = am4core.percent(20);
-      series.minFontSize = am4core.percent(7);
-    } else {
-      series.maxFontSize = am4core.percent(22);
-      series.minFontSize = am4core.percent(7);
-    }
+    series.maxFontSize = am4core.percent(20);
+    series.minFontSize = am4core.percent(7);
 
     series.heatRules.push({
       "target": series.labels.template,
@@ -54,12 +49,6 @@
       "max": am4core.color("#CC00CC"),
       "dataField": "value",
     });
-
-    if (path.includes('articles') || path.includes('posts') || path.includes('bookmarks')) {
-      series.width = am4core.percent(100);
-      series.height = am4core.percent(90);
-      series.valign = "top";
-    }
 
     const option = document.getElementById('json-option')
     if (path.includes('posts') || (JSON.parse(option.dataset.json) == '投稿')) {

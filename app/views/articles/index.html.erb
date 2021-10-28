@@ -33,7 +33,7 @@
         </div>
         <!-- メインコンテンツ -->
         <div class='col-md-7 col-lg-8'>
-          <!--検索フォームの初期値（クリックしたタグのnameを代入）-->
+          <!--検索フォームにクリックしたタグのnameを代入-->
           <div id='json_category_name' data-json='<%= params[:category_name].to_json %>'></div>
           <% if @tag_names.blank? %>
             <div id='json_tag_names' data-json='<%= [].to_json %>'></div>
