@@ -1,0 +1,30 @@
+<% if params[:change_title].present? %>
+  <div class='d-lg-flex mb-2'>
+    <div class='d-flex'>
+      <h4 class='pt-1 mb-3 mr-2 mb-lg-0 text-nowrap'>タイトル検索</h4>
+      <a class=' pt-2' style='font-size: 17px;' href="?">
+        <span class='fas fa-exchange-alt text-dark mr-1'></span>Tag検索
+      </a>
+    </div>
+    <div class='offset-lg-1 d-flex align-items-center mb-3 mb-lg-0'>
+      <h5 class='mb-0'>カテゴリ選択：</h5>
+      <%= select_tag :category_name, options_for_select(['未選択'] + category_names),
+        class:'badge border border-success text-success', style:'font-size: 20px;', onchange:'selCategory()'
+      %>
+    </div>
+  </div>
+  <%= f.text_field :keyword, class:"form-control col-9 col-sm-10 d-inline-block" %>
+  <script>
+    function selCategory() {
+      document.getElementById("search-btn").click();
+    };
+  </script>
+<% else %>
+  <div id="search">
+    <div id="category-names" data-json="<%= category_names.to_json %>"></div>
+    <%= javascript_pack_tag 'search_vue' %>
+  </div>
+<% end %>
+<div class="form-group d-inline-block">
+  <%= f.submit "検索", id:"search-btn", class:"btn btn-primary mb-1 #{ 'd-none' if params[:change_title].blank? }" %>
+</div>

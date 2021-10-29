@@ -1,8 +1,13 @@
 <template>
   <div>
-    <div class='row mb-2'>
-      <h4 class='col-md-3 pt-1 mb-3 mb-md-0 text-nowrap'>Tag検索</h4>
-      <div class='col-md-9 d-flex align-items-center'>
+    <div class='d-sm-flex d-md-block d-lg-flex mb-2'>
+      <div class='d-flex mb-2'>
+        <h4 class='pt-1 mb-2 mb-lg-0 text-nowrap mr-1'>Tag検索</h4>
+        <a class=' pt-2' style='font-size: 17px;' href="?change_title=title">
+          <span class='fas fa-exchange-alt text-dark mr-1'></span>タイトル検索
+        </a>
+      </div>
+      <div class='offset-sm-1 offset-md-0 offset-lg-1 d-flex align-items-center mb-3 mb-lg-0'>
         <h5 class='mb-0'>カテゴリ選択：</h5>
         <select class='badge border border-success text-success' style="font-size: 20px;" name="category_name" id="category_name" v-model='selectedCategory'>
           <option>未選択</option>

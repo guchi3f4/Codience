@@ -23,8 +23,19 @@ class ArticlesController < ApplicationController
     @article = Article.new
     @category_names = Category.pluck(:name)
     params[:category_name] = '未選択' if params[:category_name].blank?
+
+    # 検索にタイトルが入力されているか
+    if params[:keyword].present?
+      keyword = params[:keyword]
+      if params[:category_name] == '未選択'
+        @articles = Article.where('title LIKE ?', "%#{keyword}%")
+      else
+        @category = Category.find_by(name: params[:category_name])
+        @articles = @category.articles.where('title LIKE ?', "%#{keyword}%")
+      end
+
     # 検索にタグが入力されているか
-    if params[:content].present?
+    elsif params[:content].present?
       @tag_names = params[:content].split(',')
       # 検索タグが一つの場合
       if @tag_names.count == 1
@@ -57,6 +68,7 @@ class ArticlesController < ApplicationController
         select_article_ids = hash_article_ids.select { |key, value| value >= @duplicate_num }
         @articles = Article.where(id: select_article_ids.keys)
       end
+
     # 検索にタグが入力されていな場合
     else
       if params[:category_name] == '未選択'

@@ -58,8 +58,20 @@ class UsersController < ApplicationController
     @article = Article.new
     params[:category_name] = '未選択' if params[:category_name].blank?
     @category_names = Category.pluck(:name)
+
+    # 検索にタイトルが入力されているか
+    if params[:keyword].present?
+      keyword = params[:keyword]
+      if params[:category_name] == '未選択'
+        @articles = @user.articles.where('title LIKE ?', "%#{keyword}%")
+      else
+        @category = Category.find_by(name: params[:category_name])
+        articles = @category.articles.where(user_id: @user.id)
+        @articles = articles.where('title LIKE ?', "%#{keyword}%")
+      end
+
     # 検索タグが入力されているか
-    if params[:content].present?
+    elsif params[:content].present?
       @tag_names = params[:content].split(',')
       # 検索タグが一つの場合
       if @tag_names.count == 1
@@ -93,6 +105,7 @@ class UsersController < ApplicationController
         select_article_ids = hash_article_ids.select { |key, value| value >= @duplicate_num }
         @articles = Article.where(id: select_article_ids.keys)
       end
+
     # 検索タグが入力されていな場合
     else
       if params[:category_name] == '未選択'
@@ -166,8 +179,21 @@ class UsersController < ApplicationController
     params[:category_name] = '未選択' if params[:category_name].blank?
     @article_bookmarks_ids = @user.article_bookmarks.pluck(:article_id)
     @category_names = Category.pluck(:name)
+
+    # 検索にタイトルが入力されているか
+    if params[:keyword].present?
+      keyword = params[:keyword]
+      if params[:category_name] == '未選択'
+        articles = Article.where(id: @article_bookmarks_ids)
+        @articles = articles.where('title LIKE ?', "%#{keyword}%")
+      else
+        @category = Category.find_by(name: params[:category_name])
+        articles = @category.articles.where(id: @article_bookmarks_ids)
+        @articles = articles.where('title LIKE ?', "%#{keyword}%")
+      end
+
     # 検索にタグが入力されているか
-    if params[:content].present?
+    elsif params[:content].present?
       @tag_names = params[:content].split(',')
       # 検索タグが一つの場合
       if @tag_names.count == 1
@@ -201,6 +227,7 @@ class UsersController < ApplicationController
         select_article_ids = hash_article_ids.select { |key, value| value >= @duplicate_num }
         @articles = Article.where(id: select_article_ids.keys)
       end
+
     # 検索にタグが入力されていな場合
     else
       if params[:category_name] == '未選択'
