@@ -13,7 +13,7 @@
   <div class='form-group px-0'>
     <%= label_tag :category_name, 'Category', class:'font-weight-bold' %><br>
     <%= select_tag :category_name, options_for_select([['選択してください', '']] + @category_names, @article_category_name),
-    class:'badge border border-success text-success py-2 font-weight-bold', style:'font-size: 15px; min-width: 40%;' %>
+    class:'badge border border-success text-success bg-white py-2 font-weight-bold', style:'font-size: 15px; min-width: 40%;' %>
   </div>
 
   <div id='post-tags'>
