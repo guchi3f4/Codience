@@ -1,0 +1,8 @@
+<div class='col-6 col-md-4 border-bottom border-top py-3'>
+  followers：<%= user.followers.count %>人
+  <%= link_to 'フォロワー', followers_user_path(user), class:'d-block pt-2' %>
+</div>
+<div class='col-6 col-md-4 border-bottom border-top py-3'>
+  followes：<%= user.following.count %>人
+  <%= link_to 'フォロー中', following_user_path(user), class:'d-block pt-2' %>
+</div>
