@@ -9,6 +9,7 @@ class Article < ApplicationRecord
 
   validates :title, presence: true
   validates :link,  presence: true
+  validates :link, format: /\A#{URI::regexp(%w(http https))}\z/
 
   def favorited_by?(user)
     article_favorites.where(user_id: user.id).exists?
