@@ -7,7 +7,7 @@ class Article < ApplicationRecord
   has_many :article_tags, dependent: :destroy
   has_many :tags, through: :article_tags
 
-  validates :title, presence: true
+  validates :title, length: { in: 7..70 }
   validates :link,  presence: true
   validates :link, format: /\A#{URI::regexp(%w(http https))}\z/
 
