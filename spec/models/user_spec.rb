@@ -45,7 +45,7 @@ RSpec.describe 'userモデルのテスト' do
         user.introduction = Faker::Lorem.characters(number: 100)
         expect(user).to be_valid
       end
-      it '50文字以下であること: 101文字は無効' do
+      it '100文字以下であること: 101文字は無効' do
         user.introduction = Faker::Lorem.characters(number: 101)
         expect(user).to be_invalid
       end

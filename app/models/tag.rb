@@ -5,5 +5,7 @@ class Tag < ApplicationRecord
   has_many :category_tags, dependent: :destroy
   has_many :categories, through: :category_tags
 
-  validates :name, presence: true
+  validates :name,
+    presence:   true,
+    uniqueness: true
 end
