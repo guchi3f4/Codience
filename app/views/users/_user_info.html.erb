@@ -54,7 +54,7 @@
         <% end %>
       </div>
       <div class='col-5 border-bottom py-2'>
-        <span class='font-italic' style='font-size: 15px;'>被ブックマーク</span><br>　<!--他ユーザーからブックマークされた数の総数-->
+        <span class='font-italic' style='font-size: 15px;'>被ブックマーク</span><br> <!--他ユーザーからブックマークされた数の総数-->
         <%= link_to posts_user_path(user, sort_flag: 'ブックマーク順') do %>
           <%= user.be_bookmarks_count %>
         <% end %>

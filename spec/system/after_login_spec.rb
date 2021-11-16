@@ -12,13 +12,14 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
   let!(:article_tag) { ArticleTag.create(article: article, tag: tag) }
   let!(:other_article_tag) { ArticleTag.create(article: other_article, tag: other_tag) }
 
+  before do
+    visit new_user_session_path
+    fill_in 'user[email]', with: user.email
+    fill_in 'user[password]', with: user.password
+    click_button 'Log in'
+  end
+
   describe 'ヘッダーのテスト' do
-    before do
-      visit new_user_session_path
-      fill_in 'user[email]', with: user.email
-      fill_in 'user[password]', with: user.password
-      click_button 'Log in'
-    end
 
     context 'ヘッダーの表示を確認' do
       it 'ロゴが表示される' do
@@ -78,7 +79,64 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
     end
 
     describe 'サイドバーのテスト' do
-      context '表示内容の確認' do
+      context 'Tagsを表示' do
+        it '「Tags」と表示される' do
+          expect(page).to have_content 'Tags'
+        end
+        it '「人気のタグ」と表示される' do
+          expect(page).to have_content '人気のタグ'
+        end
+      end
+
+      context 'ログインしたユーザーの情報を表示' do
+        it '「User info」と表示される' do
+          expect(page).to have_content 'User info'
+        end
+        it '画像が表示される' do
+          expect(page).to have_selector "img[src$='#{user.profile_image}']"
+        end
+        it '画像のリンク先が正しい' do
+          expect(page).to have_link '', href: user_path(user)
+        end
+        it 'ユーザーネームが表示され、リンク先が正しい' do
+          expect(page).to have_link user.name, href: user_path(user)
+        end
+        it '「followers」と表示される' do
+          expect(page).to have_content 'followers'
+        end
+        it 'followerの数が表示され、リンク先が正しい' do
+          expect(page).to have_link user.followers.count.to_s, href: followers_user_path(user)
+        end
+        it '「followes」と表示される' do
+          expect(page).to have_content 'followes'
+        end
+        it 'followした数が表示され、リンク先が正しい' do
+          expect(page).to have_link user.following.count.to_s, href: following_user_path(user)
+        end
+        it '「投稿」と表示される' do
+          expect(page).to have_content '投稿'
+        end
+        it '投稿した数が表示され、リンク先が正しい' do
+          expect(page).to have_link user.articles.count.to_s, href: posts_user_path(user)
+        end
+        it '「ブックマーク」と表示される' do
+          expect(page).to have_content 'ブックマーク'
+        end
+        it 'ブックマークした数が表示され、リンク先が正しい' do
+          expect(page).to have_link user.article_bookmarks.count.to_s, href: bookmarks_user_path(user)
+        end
+        it '「被いいね」と表示される' do
+          expect(page).to have_content '被いいね'
+        end
+        it 'いいねされた総数が表示され、リンク先が正しい' do
+          expect(page).to have_link user.be_favorites_count.to_s, href: posts_user_path(user, sort_flag: 'いいね順')
+        end
+        it '「被ブックマーク」と表示される' do
+          expect(page).to have_content '被ブックマーク'
+        end
+        it 'ブックマークされた総数が表示され、リンク先が正しい' do
+          expect(page).to have_link user.be_bookmarks_count.to_s, href: posts_user_path(user, sort_flag: 'ブックマーク順')
+        end
       end
     end
 
@@ -88,39 +146,23 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
           expect(page).to have_selector "img[src$='#{article.user.profile_image}']"
         end
         it '画像のリンク先が正しい' do
-          click_link '', href: user_path(article.user)
-          expect(current_path).to eq user_path(article.user)
+          expect(page).to have_link '', href: user_path(article.user)
         end
-        it 'タイトルが表示される' do
-          expect(page).to have_link article.title
+        it 'タイトルが表示され、リンク先が正しい' do
+          expect(page).to have_link article.title, href: article_path(article)
         end
-        it 'タイトルのリンク先が正しい' do
-          click_link article.title
-          expect(current_path).to eq article_path(article)
-        end
-        it 'Linkが表示されている' do
+        it 'Linkが表示され、リンク先が正しい' do
           expect(page).to have_link article.link, href: article.link
         end
         it '概要が表示されている' do
           expect(page).to have_content article.summary
         end
-        it 'カテゴリーが表示されている' do
-          expect(page).to have_link article.category.name
+        it 'カテゴリーが表示され、リンク先が正しい' do
+          expect(page).to have_link article.category.name, href: articles_path(category_name: article.category.name)
         end
-        it 'カテゴリーのリンク先が正しい' do
-          click_link article.category.name
-          uri = URI.parse(current_url)
-          expect("#{uri.path}?#{uri.query}").to eq articles_path(category_name: article.category.name)
-        end
-        it 'タグが表示されている' do
+        it 'タグが表示され、リンク先が正しい' do
           tag_name = article.tags.last.name
-          expect(page).to have_link tag_name
-        end
-        it 'タグのリンク先が正しい' do
-          tag_name = article.tags.last.name
-          click_link tag_name
-          uri = URI.parse(current_url)
-          expect("#{uri.path}?#{uri.query}").to eq articles_path(category_name: article.category.name, content: tag_name)
+          expect(page).to have_link tag_name, href: articles_path(category_name: article.category.name, content: tag_name)
         end
       end
 
@@ -129,39 +171,23 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
           expect(page).to have_selector "img[src$='#{other_article.user.profile_image}']"
         end
         it '画像のリンク先が正しい' do
-          click_link '', href: user_path(other_article.user)
-          expect(current_path).to eq user_path(other_article.user)
+          expect(page).to have_link '', href: user_path(other_article.user)
         end
-        it 'タイトルが表示される' do
-          expect(page).to have_link other_article.title
+        it 'タイトルが表示され、リンク先が正しい' do
+          expect(page).to have_link other_article.title, href: article_path(other_article)
         end
-        it 'タイトルのリンク先が正しい' do
-          click_link other_article.title
-          expect(current_path).to eq article_path(other_article)
-        end
-        it 'Linkが表示されている' do
+        it 'Linkが表示され、リンク先が正しい' do
           expect(page).to have_link other_article.link, href: other_article.link
         end
         it '概要が表示されている' do
           expect(page).to have_content other_article.summary
         end
-        it 'カテゴリーが表示されている' do
-          expect(page).to have_link other_article.category.name
+        it 'カテゴリーが表示され、リンク先が正しい' do
+          expect(page).to have_link other_article.category.name, href: articles_path(category_name: other_article.category.name)
         end
-        it 'カテゴリーのリンク先が正しい' do
-          click_link other_article.category.name
-          uri = URI.parse(current_url)
-          expect("#{uri.path}?#{uri.query}").to eq articles_path(category_name: other_article.category.name)
-        end
-        it 'タグが表示されている' do
+        it 'タグが表示され、リンク先が正しい' do
           tag_name = other_article.tags.last.name
-          expect(page).to have_link tag_name
-        end
-        it 'タグのリンク先が正しい' do
-          tag_name = other_article.tags.last.name
-          click_link tag_name
-          uri = URI.parse(current_url)
-          expect("#{uri.path}?#{uri.query}").to eq articles_path(category_name: other_article.category.name, content: tag_name)
+          expect(page).to have_link tag_name, href: articles_path(category_name: other_article.category.name, content: tag_name)
         end
       end
     end
