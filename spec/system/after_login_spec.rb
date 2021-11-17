@@ -92,6 +92,12 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
         it '「User info」と表示される' do
           expect(page).to have_content 'User info'
         end
+        it 'ユーザー編集画面へのリンクが存在する' do
+          expect(page).to have_link '', href: edit_user_path(user)
+        end
+        it '新規投稿画面へのリンクが存在す' do
+          expect(page).to have_link '', href: new_article_path
+        end
         it '画像が表示される' do
           expect(page).to have_selector "img[src$='#{user.profile_image}']"
         end
@@ -140,8 +146,41 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
       end
     end
 
+    context 'ソート機能の表示' do
+      it '「新着順」と表示される' do
+        expect(page).to have_content '新着順'
+      end
+      it '新着順ボタンが表示される' do
+        expect(page).to have_button '新着順'
+      end
+      it '新着順ボタンの遷移先と、表示が正しい', js: true do
+        click_button '新着順'
+        expect(current_path).to eq articles_path
+        expect(find('#hidden-form', visible: false).value).to eq '新着順'
+      end
+      it 'いいね順ボタンが表示される' do
+        expect(page).to have_button 'いいね順'
+      end
+      it 'いいね順ボタンの遷移先と、表示が正しい', js: true do
+        click_button 'いいね順'
+        expect(current_path).to eq articles_path
+        expect(find('#hidden-form', visible: false).value).to eq 'いいね順'
+      end
+      it 'ブックマーク順ボタンが表示される' do
+        expect(page).to have_button 'ブックマーク順'
+      end
+      it 'ブックマーク順ボタンの遷移先と、表示が正しい', js: true do
+        click_button 'ブックマーク順'
+        expect(current_path).to eq articles_path
+        expect(find('#hidden-form', visible: false).value).to eq 'ブックマーク順'
+      end
+    end
+
     describe '投稿一覧のテスト' do
       context '自分の投稿を表示' do
+        it '「Articles」と表示される' do
+          expect(page).to have_content 'Articles'
+        end
         it '画像が表示される' do
           expect(page).to have_selector "img[src$='#{article.user.profile_image}']"
         end
