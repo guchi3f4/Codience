@@ -3,7 +3,7 @@
     <div class='d-sm-flex d-md-block d-lg-flex mb-2'>
       <div class='d-flex mb-2'>
         <h4 class='pt-1 mb-2 mb-lg-0 text-nowrap mr-1'>Tag検索</h4>
-        <a class=' pt-2' style='font-size: 17px;' href="?change_title=title">
+        <a class=' pt-2' style='font-size: 17px;' href="/articles?change_title=title">
           <span class='fas fa-exchange-alt text-dark mr-1'></span>タイトル検索
         </a>
       </div>
@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <input type="hidden" id="tag-names" class="form-control" v-model="tags" name="content">
+    <input type="hidden" id="search-tag-names" class="form-control" v-model="tags" name="content">
     <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1" @click='inputField'>
       <div class="badge badge-primary badge-pill mr-1 mb-1" style="font-size: 100%;" v-for="tag in tags">
         {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>

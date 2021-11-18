@@ -146,33 +146,70 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
       end
     end
 
-    context 'ソート機能の表示' do
-      it '「新着順」と表示される' do
-        expect(page).to have_content '新着順'
+    describe '検索機能のテスト', js: true do
+      context 'Tag検索を表示' do
+        it '「Tag検索」と表示される' do
+          expect(page).to have_content 'Tag検索'
+        end
+        it 'タイトル検索リンクが表示され、遷移先が正しい' do
+          expect(page).to have_link 'タイトル検索', href: '/articles?change_title=title'
+        end
+        it 'セレクトボックスに「未選択」と表示される' do
+          expect(page).to have_selector 'select', text: '未選択'
+        end
+        it 'Tag検索フォームが表示される（入力用）' do
+          expect(page).to have_field 'search-field'
+        end
+        it '非表示のTag検索フォームが存在する（送信用）' do
+          expect(page).to have_selector '#search-tag-names', visible: false
+        end
       end
-      it '新着順ボタンが表示される' do
-        expect(page).to have_button '新着順'
+      context 'タイトル検索を表示' do
+        before do
+          click_link 'タイトル検索'
+        end
+
+        it '「タイトル検索」と表示される' do
+          expect(page).to have_content 'タイトル検索'
+        end
+        it 'Tag検索リンクが表示され、遷移先が正しい' do
+          expect(page).to have_link 'Tag検索', href: '/articles'
+        end
+        it 'セレクトボックスに「未選択」と表示される' do
+          expect(page).to have_selector 'select', text: '未選択'
+        end
+        it 'タイトル検索フォームが表示される' do
+          expect(page).to have_field 'keyword'
+        end
       end
-      it '新着順ボタンの遷移先と、表示が正しい', js: true do
-        click_button '新着順'
-        expect(current_path).to eq articles_path
-        expect(find('#hidden-form', visible: false).value).to eq '新着順'
-      end
-      it 'いいね順ボタンが表示される' do
-        expect(page).to have_button 'いいね順'
-      end
-      it 'いいね順ボタンの遷移先と、表示が正しい', js: true do
-        click_button 'いいね順'
-        expect(current_path).to eq articles_path
-        expect(find('#hidden-form', visible: false).value).to eq 'いいね順'
-      end
-      it 'ブックマーク順ボタンが表示される' do
-        expect(page).to have_button 'ブックマーク順'
-      end
-      it 'ブックマーク順ボタンの遷移先と、表示が正しい', js: true do
-        click_button 'ブックマーク順'
-        expect(current_path).to eq articles_path
-        expect(find('#hidden-form', visible: false).value).to eq 'ブックマーク順'
+    end
+
+    describe 'ソート機能のテスト' do
+      context 'ソート項目を表示' do
+        it '「新着順」と表示される' do
+          expect(page).to have_content '新着順'
+        end
+        it '新着順ボタンが表示される' do
+          expect(page).to have_button '新着順'
+        end
+        it '新着順ボタンの遷移先が正しい' do
+          click_button '新着順'
+          expect(current_path).to eq articles_path
+        end
+        it 'いいね順ボタンが表示される' do
+          expect(page).to have_button 'いいね順'
+        end
+        it 'いいね順ボタンの遷移先が正しい' do
+          click_button 'いいね順'
+          expect(current_path).to eq articles_path
+        end
+        it 'ブックマーク順ボタンが表示される' do
+          expect(page).to have_button 'ブックマーク順'
+        end
+        it 'ブックマーク順ボタンの遷移先が正しい' do
+          click_button 'ブックマーク順'
+          expect(current_path).to eq articles_path
+        end
       end
     end
 
