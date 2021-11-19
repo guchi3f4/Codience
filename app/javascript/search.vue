@@ -9,7 +9,7 @@
       </div>
       <div class='offset-sm-1 offset-md-0 offset-lg-1 d-flex align-items-center mb-3 mb-lg-0'>
         <h5 class='mb-0'>カテゴリ選択：</h5>
-        <select class='badge border border-success text-success bg-white' style="font-size: 20px;" name="category_name" id="category_name" v-model='selectedCategory'>
+        <select class='badge border border-success text-success bg-white' style="font-size: 20px;" name="category_name" id="search-category_name" v-model='selectedCategory'>
           <option>未選択</option>
           <option v-for='(category, index) in categories'>{{category}}</option>
         </select>

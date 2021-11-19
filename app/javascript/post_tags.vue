@@ -1,13 +1,13 @@
 <template>
   <div class='form-group'>
     <div>
-      <label for='field' class='font-weight-bold'>Tag</label>
+      <label for='tag-field' class='font-weight-bold'>Tag</label>
       <input type="hidden" id="tag-names" class="form-control" v-model="tags" name="tag_names">
       <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1" @click='inputField'>
         <div class="badge badge-primary badge-pill mr-1 mb-1" style="font-size: 100%;" v-for="tag in tags">
           {{tag}}<span class="pl-1" type="button" v-on:click="delTag(tag)">×</span>
         </div>
-        <input id="field" class="border-0" style="outline: 0" type="text" placeholder="複数追加できます(Enterで確定)" v-model="newTag" v-on:keydown.enter="setTag"
+        <input id="tag-field" class="border-0" style="outline: 0" type="text" placeholder="複数追加できます(Enterで確定)" v-model="newTag" v-on:keydown.enter="setTag"
         @input='onInput' autocomplete="off" size='26'>
       </div>
     </div>
@@ -62,7 +62,7 @@
       },
 
       inputField: function() {
-        document.getElementById("field").focus();
+        document.getElementById("tag-field").focus();
       },
 
       // 補完情報の取得
@@ -96,7 +96,7 @@
         }
         this.tags.push(this.allTags[index]);
         this.newTag = '';
-        document.getElementById("field").focus();
+        document.getElementById("tag-field").focus();
       }
     },
   }

@@ -9,6 +9,7 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
   let!(:other_article) { create(:article, user: other_user) }
   let!(:tag) { create(:tag) }
   let!(:other_tag) { create(:tag) }
+  let!(:category) { create(:category) }
   let!(:article_tag) { ArticleTag.create(article: article, tag: tag) }
   let!(:other_article_tag) { ArticleTag.create(article: other_article, tag: other_tag) }
 
@@ -143,6 +144,85 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
         it 'ブックマークされた総数が表示され、リンク先が正しい' do
           expect(page).to have_link user.be_bookmarks_count.to_s, href: posts_user_path(user, sort_flag: 'ブックマーク順')
         end
+        it '「introduction」と表示される' do
+          expect(page).to have_content 'introduction'
+        end
+        it '紹介文が表示される' do
+          expect(page).to have_content user.introduction
+        end
+      end
+
+      context '新規投稿フォームの表示' do
+        it '「New Article」と表示される' do
+          expect(page).to have_content 'New Article'
+        end
+        it '「投稿フォーム拡大」と表示され、リンクが正しい' do
+          expect(page).to have_link '投稿フォーム拡大', href: new_article_path
+        end
+        it 'titleフォームが表示される' do
+          expect(page).to have_field 'article[title]'
+        end
+        it 'titleフォームに値が入っていない' do
+          expect(find_field('article[title]').text).to be_blank
+        end
+        it 'Linkフォームが表示される' do
+          expect(page).to have_field 'article[link]'
+        end
+        it 'Linkフォームに値が入っていない' do
+          expect(find_field('article[link]').text).to be_blank
+        end
+        it 'Categoryフォームが表示される' do
+          expect(page).to have_field 'category_name'
+        end
+        it 'Categoryフォームのセレクトボックスに「選択してください」と表示される' do
+          expect(page).to have_selector 'select', text: '選択してください'
+        end
+        it 'Tag検索フォームが表示される（入力用）', js: true do
+          expect(page).to have_field 'tag-field'
+        end
+        it '非表示のTag検索フォームが存在する（送信用）', js: true do
+          expect(page).to have_selector '#tag-names', visible: false
+        end
+        it '非表示のTag検索フォームに値が入っていない', js: true do
+          expect(find('#tag-names', visible: false).value).to be_blank
+        end
+        it 'Linkフォームに値が入っていない' do
+          expect(find_field('article[link]').text).to be_blank
+        end
+        it 'Linkフォームが表示される' do
+          expect(page).to have_field 'article[link]'
+        end
+        it 'Linkフォームに値が入っていない' do
+          expect(find_field('article[link]').text).to be_blank
+        end
+        it 'Summaryフォームが表示される' do
+          expect(page).to have_field 'article[summary]'
+        end
+        it 'Summaryフォームに値が入っていない' do
+          expect(find_field('article[summary]').text).to be_blank
+        end
+        it 'Create articleボタンが表示される' do
+          expect(page).to have_button 'Create Article'
+        end
+      end
+
+      context '投稿成功のテスト', js: true do
+        before do
+          fill_in 'article[title]', with: Faker::Lorem.characters(number: 10)
+          fill_in 'article[link]', with: Faker::Internet.url
+          select category.name, from: 'Category'
+          fill_in 'tag-field', with: Faker::Lorem.characters(number: 8)
+          find("#tag-field").send_keys :enter
+          fill_in 'article[summary]', with: Faker::Lorem.characters(number: 20)
+        end
+
+        it '自分の新しい投稿が正しく保存される' do
+          expect { click_button 'Create Article' }.to change(user.articles, :count).by(1)
+        end
+        it '遷移先が、保存できた投稿の詳細画面になっている' do
+          click_button 'Create Article'
+          expect(current_path).to eq article_path(user.articles.last)
+        end
       end
     end
 
@@ -162,6 +242,9 @@ RSpec.describe 'ユーザーログイン後のテスト', type: :system do
         end
         it '非表示のTag検索フォームが存在する（送信用）' do
           expect(page).to have_selector '#search-tag-names', visible: false
+        end
+        it '非表示のTag検索フォームに値が入っていない', js: true do
+          expect(find('#search-tag-names', visible: false).value).to be_blank
         end
       end
       context 'タイトル検索を表示' do
