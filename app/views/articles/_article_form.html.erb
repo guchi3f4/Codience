@@ -49,7 +49,7 @@
   <% end %>
 
   <div class="form-group mt-4">
-    <% if request.url.include?('/edit') %>
+    <% if article.id.present?  %>
       <button class='btn btn-success' type="button" onclick="submit(); ">Update Article</button>
     <% else %>
       <button class='btn btn-success' type="button" onclick="submit(); ">Create Article</button>

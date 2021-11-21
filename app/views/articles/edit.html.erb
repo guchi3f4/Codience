@@ -1,10 +1,10 @@
 <div class='pattern-cross-dots-lg'>
   <div style='background: rgba(255,255,255,0.80);'>
     <div class='custom-container py-5 px-3 px-sm-5 border bg-white shadow-lg'>
-      <div class='article-error'>
-        <%= render 'layouts/error', obj: @article %>
-      </div>
       <h2 class="mb-5">Editing Article</h2>
+        <div class='article-error'>
+          <%= render 'layouts/error', obj: @article %>
+        </div>
         <%= render 'articles/article_form', article: @article %>
     </div>
   </div>
