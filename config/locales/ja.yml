@@ -44,3 +44,36 @@ ja:
       invalid_chars: "%{attribute}に使用できない文字が含まれています（%{chars}）。"
       in_between: "の容量は%{min}以上%{max}以下にしてください。"
       spoofed_media_type: "%{attribute}の拡張子と内容が一致していません。"
+
+  devise:
+    failure:
+      unauthenticated: 'ログインしてください。'
+      unconfirmed: '本登録を行ってください。'
+      locked: 'あなたのアカウントは凍結されています。'
+      invalid: 'メールアドレスかパスワードが違います。'
+      invalid_token: '認証キーが不正です。'
+      timeout: 'セッションがタイムアウトしました。もう一度ログインしてください。'
+      inactive: 'アカウントがアクティベートされていません。'
+    sessions:
+      signed_in: 'ログインしました。'
+      signed_out: 'ログアウトしました。'
+    passwords:
+      send_instructions: 'パスワードのリセット方法を数分以内にメールでご連絡します。'
+      updated: 'パスワードを変更しました。'
+    confirmations:
+      send_instructions: '登録方法を数分以内にメールでご連絡します。'
+      confirmed: 'アカウントを登録しました。'
+    registrations:
+      signed_up: 'アカウント登録を受け付けました。確認のメールをお送りします。'
+      updated: 'アカウントを更新しました。'
+      destroyed: 'アカウントを削除しました。またのご利用をお待ちしております。'
+    unlocks:
+      send_instructions: 'アカウントの凍結解除方法を数分以内にメールでご連絡します。'
+      unlocked: 'アカウントを凍結解除しました。'
+    mailer:
+      confirmation_instructions:
+        subject: 'アカウントの登録方法'
+      reset_password_instructions:
+        subject: 'パスワードの再設定'
+      unlock_instructions:
+        subject: 'アカウントの凍結解除'

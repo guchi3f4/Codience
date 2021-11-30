@@ -1,6 +1,9 @@
 <div class='pattern-cross-dots-lg'>
   <div style='background: rgba(235,235,235,0.70);'>
     <div class='custom-container py-5 px-sm-4 px-md-5 border bg-white shadow-lg' style='min-height: 750px;'>
+      <!--サクセスメッセージ-->
+      <%= render 'layouts/notification' %>
+
       <div class='d-flex align-items-center justify-content-center flex-wrap mb-4'>
         <h1 class='font-weight-bold mr-3' style='font-family: cursive;'>User Page</h1>
         <h4 class='text-line d-sm-flex font-italic'><%= @user.name%></h4>

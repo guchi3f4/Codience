@@ -176,7 +176,7 @@ class ArticlesController < ApplicationController
         category_tag = @category.category_tags.find_or_create_by(tag_id: tag.id)
         category_tag.update(registration_count: category_tag.registration_count += 1)
       end
-      redirect_to article_path(@article)
+      redirect_to article_path(@article), notice: "記事を投稿しました"
     end
   rescue ActiveRecord::RecordInvalid
     @article.errors.add(:tag_names, 'Tagを入力してください') if @sent_tags.empty?
@@ -215,8 +215,9 @@ class ArticlesController < ApplicationController
       # 記事を一つも持たないタグを消去
       tag_ids = ArticleTag.pluck(:tag_id).uniq
       Tag.where.not(id: tag_ids).destroy_all
+
+      redirect_to article_path(@article), notice: "記事を更新しました"
     end
-    redirect_to article_path(@article)
   rescue ActiveRecord::RecordInvalid
     @article.errors.add(:tag_names, 'Tagを入力してください') if @sent_tags.empty?
     @article_category_name = params[:category_name]
