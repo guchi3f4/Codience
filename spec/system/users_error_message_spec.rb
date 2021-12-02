@@ -15,11 +15,15 @@ RSpec.describe 'User CRUD処理', type: :system do
       fill_in 'user[password_confirmation]', with: 'password'
     end
 
-    context 'エラーメッセージの表示' do
+    context 'サクセスメッセージの表示' do
       it '投稿成功: フォームの入力値が正常' do
         click_button 'Sign up'
         expect(current_path).to eq user_path(User.last)
+        expect(page).to have_content 'アカウントを登録しました'
       end
+    end
+
+    context 'エラーメッセージの表示' do
       it '投稿失敗: ユーザーネームが1文字' do
         fill_in 'user[name]', with: Faker::Lorem.characters(number: 1)
         click_button 'Sign up'
@@ -65,6 +69,7 @@ RSpec.describe 'User CRUD処理', type: :system do
       fill_in 'user[password]', with: user.password
       click_button 'Log in'
       expect(current_path).to eq user_path(user)
+      expect(page).to have_content 'ログインしました'
     end
     it '投稿失敗: フォームの入力情報が存在しない' do
       visit new_user_session_path
@@ -84,11 +89,15 @@ RSpec.describe 'User CRUD処理', type: :system do
       visit edit_user_path(user)
     end
 
-    context 'エラーメッセージの表示' do
-      it '投稿成功: フォームの値が正常' do
+    context 'サクセスメッセージの表示' do
+      it '投稿成功: フォームの入力値が正常' do
         click_button 'Update User'
         expect(current_path).to eq user_path(user)
+        expect(page).to have_content 'ユーザーを更新しました'
       end
+    end
+
+    context 'エラーメッセージの表示' do
       it '投稿失敗: ユーザーネームが1文字' do
         fill_in 'user[name]', with: Faker::Lorem.characters(number: 1)
         click_button 'Update User'
